@@ -1,7 +1,7 @@
 # 📁 Kilo-Kit Project Structure
 
 > **Last Updated:** 2026-01-30  
-> **Total Files:** 34  
+> **Total Files:** 35  
 > **Status:** ✅ Complete
 
 ---
@@ -79,7 +79,8 @@ kilo-kit/
 │   │
 │   └── tools/                                # CLI Tools
 │       ├── init-skill.py                     # Create new skills
-│       └── validate-skill.py                 # Validate skills
+│       ├── validate-skill.py                 # Validate skills (Python)
+│       └── validate-skill.js                 # Validate skills (Node.js)
 │
 └── 📖 examples/                              # Learning Examples
     ├── basic/
@@ -144,12 +145,13 @@ kilo-kit/
 | Development | `backend`, `security` |
 | Quality | `code-review`, `testing` |
 
-### 🛠️ Tools (2 files)
+### 🛠️ Tools (3 files)
 
 | Tool | Command | Purpose |
 |------|---------|---------|
 | init-skill.py | `python init-skill.py <name>` | Create new skill |
-| validate-skill.py | `python validate-skill.py <path>` | Validate skill |
+| validate-skill.py | `python validate-skill.py <path>` | Validate skill (Python) |
+| validate-skill.js | `node validate-skill.js <path>` | Validate skill (Node.js) |
 
 ### 📖 Examples (3 files)
 
@@ -215,9 +217,9 @@ kilo-kit/
 | Core | 9 | ~3,500 | System engine |
 | Behaviors | 3 | ~2,500 | Action library |
 | Skills | 8 | ~4,000 | Skill library |
-| Tools | 2 | ~800 | CLI utilities |
+| Tools | 3 | ~1,200 | CLI utilities |
 | Examples | 3 | ~1,500 | Tutorials |
-| **Total** | **34** | **~15,800** | |
+| **Total** | **35** | **~16,200** | |
 
 ---
 

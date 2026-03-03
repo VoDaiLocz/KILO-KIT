@@ -68,29 +68,23 @@ kilo-kit/
 │   │   ├── _template/          # Skill template
 │   │   ├── debugging/          # Debugging skills
 │   │   ├── development/        # Development skills
-│   │   ├── quality/            # Quality assurance skills
-│   │   ├── architecture/       # Architecture design skills
-│   │   └── automation/         # Workflow automation skills
+│   │   └── quality/            # Quality assurance skills
 │   │
 │   └── tools/                  # CLI and utility tools
 │       ├── init-skill.py       # Skill initializer
-│       ├── validate-skill.py   # Skill validator
-│       └── package-skill.py    # Skill packager
+│       ├── validate-skill.py   # Skill validator (Python)
+│       └── validate-skill.js   # Skill validator (Node.js)
 │
 ├── docs/                       # Documentation
 │   ├── architecture/           # Architecture decisions
-│   ├── guides/                 # User guides
-│   └── api/                    # API documentation
+│   ├── COMPLETION_ASSESSMENT.md
+│   ├── DEEP_ANALYSIS.md
+│   └── PROJECT_STRUCTURE.md
 │
-├── examples/                   # Real-world examples
-│   ├── basic/                  # Basic usage patterns
-│   ├── intermediate/           # Intermediate patterns
-│   └── advanced/               # Advanced patterns
-│
-└── tests/                      # Test cases
-    ├── unit/                   # Unit tests
-    ├── integration/            # Integration tests
-    └── benchmarks/             # Performance benchmarks
+└── examples/                   # Real-world examples
+    ├── basic/                  # Basic usage patterns
+    ├── intermediate/           # Intermediate patterns
+    └── advanced/               # Advanced patterns
 ```
 
 ## 🚀 Quick Start
@@ -125,19 +119,13 @@ Skills are automatically loaded when your task matches their keywords. See the [
 | Task Keywords | Skill to Load |
 |---------------|---------------|
 | `bug, error, fix, debug` | `skills/debugging/systematic/` |
-| `validate, validation` | `skills/debugging/defense-in-depth/` |
+| `validate, validation` | `skills/debugging/systematic/` |
 | `root cause, why` | `skills/debugging/root-cause/` |
 | `verify, confirm` | `skills/debugging/verification/` |
 | `review, PR, code review` | `skills/quality/code-review/` |
 | `test, TDD, testing` | `skills/quality/testing/` |
 | `security, auth, OWASP` | `skills/development/security/` |
 | `API, backend, server` | `skills/development/backend/` |
-| `frontend, UI, React` | `skills/development/frontend/` |
-| `database, SQL, query` | `skills/development/database/` |
-| `architecture, design` | `skills/architecture/system-design/` |
-| `microservices, scale` | `skills/architecture/scalability/` |
-| `CI/CD, deploy, Docker` | `skills/automation/devops/` |
-| `context, token, optimize` | `skills/automation/context-engineering/` |
 
 ## 🎓 Core Principles
 
@@ -237,8 +225,8 @@ token_estimate:
 ## 📚 Documentation
 
 - **[QUICKSTART.md](./QUICKSTART.md)** - Get started in 15 minutes
-- **[docs/guides/](./docs/guides/)** - User guides and tutorials
 - **[docs/architecture/](./docs/architecture/)** - Architecture design documents
+- **[docs/PROJECT_STRUCTURE.md](./docs/PROJECT_STRUCTURE.md)** - Project structure guide
 - **[examples/](./examples/)** - Real-world usage examples
 
 ## 🤝 Contributing

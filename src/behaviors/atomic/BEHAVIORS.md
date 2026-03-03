@@ -90,7 +90,53 @@ example:
 
 ---
 
-### 3. `read_file`
+### 3. `list_dir`
+
+**Purpose:** List the contents of a directory.
+
+```yaml
+behavior: list_dir
+category: retrieval
+
+input:
+  path: string
+  recursive: bool (default: false)
+  max_depth: int (default: 1)
+  include_hidden: bool (default: false)
+
+output:
+  entries: array<{name, type, size_bytes}>
+  total_count: int
+  tokens_used: int
+
+token_cost: ~15
+
+example:
+  input:
+    path: "src/skills"
+    recursive: false
+  output:
+    entries:
+      - name: "_template"
+        type: "directory"
+      - name: "debugging"
+        type: "directory"
+      - name: "development"
+        type: "directory"
+      - name: "quality"
+        type: "directory"
+    total_count: 4
+```
+
+> **Cross-Platform Notes:**
+> - Claude Code: `list_dir` maps to the `LS` tool
+> - Cursor: `list_dir` maps to `list_dir` (native)
+> - Codex: `list_dir` maps to shell `ls` or `find`
+> - OpenCode: `list_dir` maps to directory listing APIs
+
+---
+
+### 4. `read_file`
 
 **Purpose:** Read contents of a file.
 
@@ -124,7 +170,7 @@ example:
 
 ---
 
-### 4. `write_file`
+### 5. `write_file`
 
 **Purpose:** Write or modify file contents.
 
@@ -157,7 +203,7 @@ example:
 
 ---
 
-### 5. `run_command`
+### 6. `run_command`
 
 **Purpose:** Execute a CLI command.
 
@@ -193,7 +239,7 @@ example:
 
 ---
 
-### 6. `validate_syntax`
+### 7. `validate_syntax`
 
 **Purpose:** Validate code syntax for a given language.
 
@@ -228,7 +274,7 @@ example:
 
 ---
 
-### 7. `validate_data`
+### 8. `validate_data`
 
 **Purpose:** Validate data against a schema.
 
@@ -262,7 +308,7 @@ example:
 
 ---
 
-### 8. `reason`
+### 9. `reason`
 
 **Purpose:** Apply logical reasoning to reach a conclusion.
 
@@ -301,7 +347,7 @@ example:
 
 ---
 
-### 9. `generate`
+### 10. `generate`
 
 **Purpose:** Generate content (code, text, etc.).
 
@@ -334,7 +380,7 @@ example:
 
 ---
 
-### 10. `compare`
+### 11. `compare`
 
 **Purpose:** Compare two items and identify differences.
 
@@ -372,7 +418,7 @@ example:
 
 ---
 
-### 11. `summarize`
+### 12. `summarize`
 
 **Purpose:** Summarize content to reduce token usage.
 
@@ -405,7 +451,7 @@ example:
 
 ---
 
-### 12. `ask_user`
+### 13. `ask_user`
 
 **Purpose:** Request clarification from user.
 
@@ -483,6 +529,7 @@ conditional:
 |----------|------------|---------|-----|
 | parse_input | 30 | 50 | 100 |
 | search_code | 50 | 100 | 300 |
+| list_dir | 10 | 15 | 50 |
 | read_file | 20 | 50 | 500+ |
 | write_file | 20 | 30 | 50 |
 | run_command | 30 | 40 | 100 |
@@ -496,4 +543,4 @@ conditional:
 
 ---
 
-*Atomic Behaviors Reference v1.0.0 — Building blocks for intelligent actions*
+*Atomic Behaviors Reference v1.0.0 — 13 building blocks for intelligent actions*
