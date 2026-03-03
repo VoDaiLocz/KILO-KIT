@@ -16,7 +16,7 @@ This audit examined the Kilo-Kit Agentic Skill Library across four dimensions:
 3. Cross-platform installation integrity
 4. Verification of tool assumptions across supported environments
 
-**12 findings** were identified and categorized. All have been resolved in this commit.
+**11 findings** were identified and categorized. All have been resolved in this commit.
 
 ---
 
