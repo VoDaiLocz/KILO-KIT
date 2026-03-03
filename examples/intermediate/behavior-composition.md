@@ -61,7 +61,7 @@ Let's create a custom "quick debug" workflow that:
 
 ### Step 1: Define the Workflow
 
-Create `src/skills/debugging/quick-debug/SKILL.md`:
+Create `skills/kilo-kit/debugging/quick-debug/SKILL.md`:
 
 ```yaml
 ---
@@ -412,7 +412,7 @@ kilo-kit run quick-debug --mock-input '{"error": "..."}'
 Use the validator:
 
 ```bash
-python src/tools/validate-skill.py src/skills/debugging/quick-debug/
+python src/tools/validate-skill.py skills/kilo-kit/debugging/quick-debug/
 ```
 
 ---

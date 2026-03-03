@@ -530,10 +530,10 @@ Before considering API complete:
 
 ## Related Skills
 
-- `skills/development/database/` - For data layer
-- `skills/development/security/` - For security concerns
-- `skills/quality/testing/` - For test coverage
-- `skills/architecture/system-design/` - For architecture decisions
+- `skills/kilo-kit/development/database/` - For data layer
+- `skills/kilo-kit/development/security/` - For security concerns
+- `skills/kilo-kit/quality/testing/` - For test coverage
+- `skills/kilo-kit/architecture/system-design/` - For architecture decisions
 
 ---
 

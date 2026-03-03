@@ -531,9 +531,9 @@ Before considering testing complete:
 
 ## Related Skills
 
-- `skills/quality/code-review/` - For reviewing test quality
-- `skills/debugging/verification/` - For verifying fixes
-- `skills/development/backend/` - For testing APIs
+- `skills/kilo-kit/quality/code-review/` - For reviewing test quality
+- `skills/kilo-kit/debugging/verification/` - For verifying fixes
+- `skills/kilo-kit/development/backend/` - For testing APIs
 
 ---
 

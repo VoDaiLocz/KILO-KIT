@@ -520,9 +520,9 @@ Before considering code secure:
 
 ## Related Skills
 
-- `skills/development/backend/` - For API security
-- `skills/quality/code-review/` - For security review
-- `skills/debugging/root-cause/` - For security incident analysis
+- `skills/kilo-kit/development/backend/` - For API security
+- `skills/kilo-kit/quality/code-review/` - For security review
+- `skills/kilo-kit/debugging/root-cause/` - For security incident analysis
 
 ---
 

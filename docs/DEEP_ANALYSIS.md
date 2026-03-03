@@ -156,11 +156,11 @@
 - [ ] Create `src/core/predictive-engine/prefetch-scheduler.md`
 
 #### Skills Expansion
-- [ ] Create `src/skills/debugging/root-cause/SKILL.md`
-- [ ] Create `src/skills/debugging/verification/SKILL.md`
-- [ ] Create `src/skills/development/backend/SKILL.md`
-- [ ] Create `src/skills/development/security/SKILL.md`
-- [ ] Create `src/skills/development/frontend/SKILL.md`
+- [ ] Create `skills/kilo-kit/debugging/root-cause/SKILL.md`
+- [ ] Create `skills/kilo-kit/debugging/verification/SKILL.md`
+- [ ] Create `skills/kilo-kit/development/backend/SKILL.md`
+- [ ] Create `skills/kilo-kit/development/security/SKILL.md`
+- [ ] Create `skills/kilo-kit/development/frontend/SKILL.md`
 
 #### Tools Enhancement
 - [ ] Create `src/tools/validate-skill.py`

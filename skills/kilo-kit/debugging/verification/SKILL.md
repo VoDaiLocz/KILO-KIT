@@ -415,9 +415,9 @@ Before marking bug as fixed:
 
 ## Related Skills
 
-- `skills/debugging/systematic/` - For finding the bug
-- `skills/debugging/root-cause/` - For understanding why it happened
-- `skills/quality/testing/` - For writing better tests
+- `skills/kilo-kit/debugging/systematic/` - For finding the bug
+- `skills/kilo-kit/debugging/root-cause/` - For understanding why it happened
+- `skills/kilo-kit/quality/testing/` - For writing better tests
 
 ---
 

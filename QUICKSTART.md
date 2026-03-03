@@ -246,7 +246,7 @@ This reveals:
 
 ## 📚 Next Steps
 
-1. **Explore existing skills** in `src/skills/`
+1. **Explore existing skills** in `skills/kilo-kit/`
 2. **Read the architecture doc** in `docs/architecture/`
 3. **Create custom skills** for your workflow
 4. **Contribute improvements** - see CONTRIBUTING.md

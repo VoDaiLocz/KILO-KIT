@@ -351,9 +351,9 @@ Before claiming analysis complete:
 
 ## Related Skills
 
-- `skills/debugging/systematic/` - For initial bug identification
-- `skills/debugging/verification/` - For validating fixes
-- `skills/quality/code-review/` - For review improvements
+- `skills/kilo-kit/debugging/systematic/` - For initial bug identification
+- `skills/kilo-kit/debugging/verification/` - For validating fixes
+- `skills/kilo-kit/quality/code-review/` - For review improvements
 
 ---
 

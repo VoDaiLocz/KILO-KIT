@@ -71,9 +71,15 @@ git merge upstream/main
 
 ```
 kilo-kit/
+├── .claude-plugin/     # Claude Code entry point
+├── .cursor-plugin/     # Cursor IDE entry point
+├── .codex/             # Codex entry point
+├── .opencode/          # OpenCode entry point
+├── skills/
+│   └── kilo-kit/       # Skill modules
+├── commands/           # Workflow commands
 ├── src/
 │   ├── core/           # Core components (careful!)
-│   ├── skills/         # Skill modules
 │   ├── behaviors/      # Behavior units
 │   └── tools/          # CLI utilities
 ├── docs/               # Documentation
@@ -95,7 +101,7 @@ python -m pytest tests/unit/test-intent-parser.py
 
 ```bash
 # Validate a skill structure
-python src/tools/validate-skill.py src/skills/my-skill/
+python src/tools/validate-skill.py skills/kilo-kit/my-skill/
 ```
 
 ---
@@ -242,7 +248,7 @@ git checkout -b feature/issue-123-add-new-skill
 python -m pytest tests/
 
 # Validate skills
-python src/tools/validate-skill.py src/skills/your-skill/
+python src/tools/validate-skill.py skills/kilo-kit/your-skill/
 ```
 
 ### 4. Submit Pull Request

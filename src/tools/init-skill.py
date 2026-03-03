@@ -294,7 +294,7 @@ def main():
     parser.add_argument(
         "--path", "-p",
         help="Base path for skills",
-        default="./src/skills"
+        default="./skills/kilo-kit"
     )
     parser.add_argument(
         "--description", "-d",

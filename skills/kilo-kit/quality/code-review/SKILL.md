@@ -288,9 +288,9 @@ Before approving:
 
 ## Related Skills
 
-- `skills/quality/testing/` - For test quality guidance
-- `skills/development/security/` - For security review
-- `skills/debugging/systematic/` - If bugs found during review
+- `skills/kilo-kit/quality/testing/` - For test quality guidance
+- `skills/kilo-kit/development/security/` - For security review
+- `skills/kilo-kit/debugging/systematic/` - If bugs found during review
 
 ---
 

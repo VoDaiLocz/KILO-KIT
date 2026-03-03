@@ -31,13 +31,13 @@ This audit examined the Kilo-Kit Agentic Skill Library across four dimensions:
 
 | Referenced Skill | Exists? |
 |-----------------|---------|
-| `skills/debugging/defense-in-depth/` | ❌ |
-| `skills/development/frontend/` | ❌ |
-| `skills/development/database/` | ❌ |
-| `skills/architecture/system-design/` | ❌ |
-| `skills/architecture/scalability/` | ❌ |
-| `skills/automation/devops/` | ❌ |
-| `skills/automation/context-engineering/` | ❌ |
+| `skills/kilo-kit/debugging/defense-in-depth/` | ❌ |
+| `skills/kilo-kit/development/frontend/` | ❌ |
+| `skills/kilo-kit/development/database/` | ❌ |
+| `skills/kilo-kit/architecture/system-design/` | ❌ |
+| `skills/kilo-kit/architecture/scalability/` | ❌ |
+| `skills/kilo-kit/automation/devops/` | ❌ |
+| `skills/kilo-kit/automation/context-engineering/` | ❌ |
 
 **Impact:** The routing engine would attempt to load non-existent skills, causing silent failures or degraded behavior with no fallback path.
 
@@ -56,8 +56,8 @@ This audit examined the Kilo-Kit Agentic Skill Library across four dimensions:
 
 | Listed Item | Exists? |
 |-------------|---------|
-| `src/skills/architecture/` | ❌ |
-| `src/skills/automation/` | ❌ |
+| `skills/kilo-kit/architecture/` | ❌ |
+| `skills/kilo-kit/automation/` | ❌ |
 | `src/tools/package-skill.py` | ❌ |
 | `docs/guides/` | ❌ |
 | `docs/api/` | ❌ |
