@@ -1,7 +1,7 @@
 # 📁 Kilo-Kit Project Structure
 
-> **Last Updated:** 2026-01-30  
-> **Total Files:** 35  
+> **Last Updated:** 2026-03-03  
+> **Total Files:** 45  
 > **Status:** ✅ Complete
 
 ---
@@ -17,14 +17,51 @@ kilo-kit/
 ├── 📄 CHANGELOG.md                           # Version history
 ├── 📄 LICENSE                                # Apache 2.0
 │
+├── 🔌 .claude-plugin/                        # Claude Code entry point
+│   └── instructions.md                       # Plugin instructions
+├── 🔌 .cursor-plugin/                        # Cursor IDE entry point
+│   └── instructions.md                       # Plugin instructions
+├── 🔌 .codex/                                # OpenAI Codex entry point
+│   └── instructions.md                       # Plugin instructions
+├── 🔌 .opencode/                             # OpenCode entry point
+│   └── instructions.md                       # Plugin instructions
+│
+├── 💡 skills/                                # Installable skill packs
+│   └── kilo-kit/                             # Core Kilo-Kit skills
+│       ├── _template/
+│       │   └── SKILL.md                      # Skill template
+│       ├── debugging/                        # Debugging Skills
+│       │   ├── systematic/
+│       │   │   └── SKILL.md                  # 4-phase debugging
+│       │   ├── root-cause/
+│       │   │   └── SKILL.md                  # 5 Whys & Fishbone
+│       │   └── verification/
+│       │       └── SKILL.md                  # Fix verification
+│       ├── development/                      # Development Skills
+│       │   ├── backend/
+│       │   │   └── SKILL.md                  # Backend API dev
+│       │   └── security/
+│       │       └── SKILL.md                  # Security best practices
+│       └── quality/                          # Quality Skills
+│           ├── code-review/
+│           │   └── SKILL.md                  # Code review checklist
+│           └── testing/
+│               └── SKILL.md                  # Testing strategy
+│
+├── ⚡ commands/                               # Workflow commands
+│   ├── quality-gate.md                       # Quality gate workflow
+│   ├── init-skill.md                         # Skill initialization
+│   └── validate-skill.md                     # Skill validation
+│
 ├── 📚 docs/                                  # Documentation
+│   ├── AUDIT_REPORT.md                       # Audit report
 │   ├── COMPLETION_ASSESSMENT.md              # Project completion status
 │   ├── DEEP_ANALYSIS.md                      # Deep analysis report
 │   ├── PROJECT_STRUCTURE.md                  # This file
 │   └── architecture/
 │       └── ARCHITECTURE_DESIGN.md            # Full architecture design
 │
-├── 🔧 src/                                   # Source code
+├── 🔧 src/                                   # Core system source
 │   │
 │   ├── core/                                 # Core system
 │   │   ├── KILO_MASTER.md                    # 🎯 Master skill (entry point)
@@ -52,30 +89,6 @@ kilo-kit/
 │   │   │   └── BEHAVIORS.md                  # 8 compound workflows
 │   │   └── meta/
 │   │       └── BEHAVIORS.md                  # 10 meta control flows
-│   │
-│   ├── skills/                               # Skill Library
-│   │   ├── _template/
-│   │   │   └── SKILL.md                      # Skill template
-│   │   │
-│   │   ├── debugging/                        # Debugging Skills
-│   │   │   ├── systematic/
-│   │   │   │   └── SKILL.md                  # 4-phase debugging
-│   │   │   ├── root-cause/
-│   │   │   │   └── SKILL.md                  # 5 Whys & Fishbone
-│   │   │   └── verification/
-│   │   │       └── SKILL.md                  # Fix verification
-│   │   │
-│   │   ├── development/                      # Development Skills
-│   │   │   ├── backend/
-│   │   │   │   └── SKILL.md                  # Backend API dev
-│   │   │   └── security/
-│   │   │       └── SKILL.md                  # Security best practices
-│   │   │
-│   │   └── quality/                          # Quality Skills
-│   │       ├── code-review/
-│   │       │   └── SKILL.md                  # Code review checklist
-│   │       └── testing/
-│   │           └── SKILL.md                  # Testing strategy
 │   │
 │   └── tools/                                # CLI Tools
 │       ├── init-skill.py                     # Create new skills
@@ -105,7 +118,33 @@ kilo-kit/
 | CHANGELOG.md | Version history | All users |
 | LICENSE | Legal terms (Apache 2.0) | Legal/Compliance |
 
-### 📚 Documentation (4 files)
+### 🔌 Plugin Entry Points (4 directories)
+
+| Directory | Platform | Purpose |
+|-----------|----------|---------|
+| `.claude-plugin/` | Claude Code | Entry point for Claude Code integration |
+| `.cursor-plugin/` | Cursor IDE | Entry point for Cursor IDE integration |
+| `.codex/` | OpenAI Codex | Entry point for Codex integration |
+| `.opencode/` | OpenCode | Entry point for OpenCode integration |
+
+### 💡 Skills (8 files)
+
+| Category | Skills |
+|----------|--------|
+| Template | `skills/kilo-kit/_template/SKILL.md` |
+| Debugging | `systematic`, `root-cause`, `verification` |
+| Development | `backend`, `security` |
+| Quality | `code-review`, `testing` |
+
+### ⚡ Commands (3 files)
+
+| Command | Purpose |
+|---------|---------|
+| `quality-gate.md` | Quality gate workflow |
+| `init-skill.md` | Skill initialization command |
+| `validate-skill.md` | Skill validation command |
+
+### 📚 Documentation (5 files)
 
 | File | Purpose | Audience |
 |------|---------|----------|
@@ -135,15 +174,6 @@ kilo-kit/
 | Atomic | BEHAVIORS.md | 12 behaviors |
 | Compound | BEHAVIORS.md | 8 workflows |
 | Meta | BEHAVIORS.md | 10 control flows |
-
-### 💡 Skills (8 files)
-
-| Category | Skills |
-|----------|--------|
-| Template | `_template/SKILL.md` |
-| Debugging | `systematic`, `root-cause`, `verification` |
-| Development | `backend`, `security` |
-| Quality | `code-review`, `testing` |
 
 ### 🛠️ Tools (3 files)
 
@@ -213,13 +243,15 @@ kilo-kit/
 | Category | Files | Lines (est.) | Purpose |
 |----------|-------|--------------|---------|
 | Root Docs | 5 | ~1,500 | Project info |
-| Documentation | 4 | ~2,000 | Detailed docs |
+| Plugin Entry Points | 4 | ~400 | Multi-platform support |
+| Documentation | 5 | ~2,000 | Detailed docs |
 | Core | 9 | ~3,500 | System engine |
 | Behaviors | 3 | ~2,500 | Action library |
 | Skills | 8 | ~4,000 | Skill library |
+| Commands | 3 | ~300 | Workflow commands |
 | Tools | 3 | ~1,200 | CLI utilities |
 | Examples | 3 | ~1,500 | Tutorials |
-| **Total** | **35** | **~16,200** | |
+| **Total** | **43** | **~16,900** | |
 
 ---
 
@@ -232,8 +264,12 @@ kilo-kit/
 | Learn what Kilo-Kit is | `README.md` |
 | Get started quickly | `QUICKSTART.md` |
 | Understand the architecture | `docs/architecture/ARCHITECTURE_DESIGN.md` |
-| Create a new skill | `src/skills/_template/SKILL.md` + `src/tools/init-skill.py` |
-| Debug code with Kilo-Kit | `src/skills/debugging/systematic/SKILL.md` |
+| Set up for Claude Code | `.claude-plugin/instructions.md` |
+| Set up for Cursor IDE | `.cursor-plugin/instructions.md` |
+| Set up for Codex | `.codex/instructions.md` |
+| Set up for OpenCode | `.opencode/instructions.md` |
+| Create a new skill | `skills/kilo-kit/_template/SKILL.md` + `src/tools/init-skill.py` |
+| Debug code with Kilo-Kit | `skills/kilo-kit/debugging/systematic/SKILL.md` |
 | Learn behavior composition | `examples/intermediate/behavior-composition.md` |
 | Understand token management | `src/core/execution-engine/token-economy.md` |
 | See how predictions work | `src/core/predictive-engine/` |
@@ -242,4 +278,4 @@ kilo-kit/
 
 ---
 
-*Project Structure v1.1.0 — Complete and Professional*
+*Project Structure v1.2.0 — Multi-platform & Professional*

@@ -168,22 +168,22 @@ output:
 
 | Intent Keywords | Primary Skill | Confidence Boost |
 |-----------------|---------------|------------------|
-| `bug, error, fix, debug, broken` | `skills/debugging/systematic/` | +0.15 if recent test failure |
-| `root cause, why, understand` | `skills/debugging/root-cause/` | +0.20 if 3rd+ fix attempt |
-| `verify, confirm, done` | `skills/debugging/verification/` | +0.25 if completion claimed |
-| `review, PR, code review` | `skills/quality/code-review/` | +0.15 if git context |
-| `test, TDD, testing` | `skills/quality/testing/` | +0.10 if new feature |
-| `security, auth, OWASP` | `skills/development/security/` | +0.30 if auth-related |
-| `API, backend, server` | `skills/development/backend/` | +0.05 if TypeScript/Python |
-| `validate, validation, check` | `skills/debugging/systematic/` ⁽¹⁾ | +0.10 if security context |
-| `frontend, UI, React` | `skills/development/frontend/` ⁽²⁾ | +0.10 if component work |
-| `database, SQL, query` | `skills/development/database/` ⁽²⁾ | +0.15 if performance issue |
-| `architecture, design` | `skills/architecture/system-design/` ⁽²⁾ | +0.20 if greenfield |
-| `scale, microservices` | `skills/architecture/scalability/` ⁽²⁾ | +0.25 if load mentioned |
-| `CI/CD, deploy, Docker` | `skills/automation/devops/` ⁽²⁾ | +0.10 if config files |
-| `context, token, optimize` | `skills/automation/context-engineering/` ⁽²⁾ | +0.30 if budget warning |
+| `bug, error, fix, debug, broken` | `skills/kilo-kit/debugging/systematic/` | +0.15 if recent test failure |
+| `root cause, why, understand` | `skills/kilo-kit/debugging/root-cause/` | +0.20 if 3rd+ fix attempt |
+| `verify, confirm, done` | `skills/kilo-kit/debugging/verification/` | +0.25 if completion claimed |
+| `review, PR, code review` | `skills/kilo-kit/quality/code-review/` | +0.15 if git context |
+| `test, TDD, testing` | `skills/kilo-kit/quality/testing/` | +0.10 if new feature |
+| `security, auth, OWASP` | `skills/kilo-kit/development/security/` | +0.30 if auth-related |
+| `API, backend, server` | `skills/kilo-kit/development/backend/` | +0.05 if TypeScript/Python |
+| `validate, validation, check` | `skills/kilo-kit/debugging/systematic/` ⁽¹⁾ | +0.10 if security context |
+| `frontend, UI, React` | `skills/kilo-kit/development/frontend/` ⁽²⁾ | +0.10 if component work |
+| `database, SQL, query` | `skills/kilo-kit/development/database/` ⁽²⁾ | +0.15 if performance issue |
+| `architecture, design` | `skills/kilo-kit/architecture/system-design/` ⁽²⁾ | +0.20 if greenfield |
+| `scale, microservices` | `skills/kilo-kit/architecture/scalability/` ⁽²⁾ | +0.25 if load mentioned |
+| `CI/CD, deploy, Docker` | `skills/kilo-kit/automation/devops/` ⁽²⁾ | +0.10 if config files |
+| `context, token, optimize` | `skills/kilo-kit/automation/context-engineering/` ⁽²⁾ | +0.30 if budget warning |
 
-> ⁽¹⁾ *Routed to closest existing skill. Originally mapped to `skills/debugging/defense-in-depth/` (planned).*  
+> ⁽¹⁾ *Routed to closest existing skill. Originally mapped to `skills/kilo-kit/debugging/defense-in-depth/` (planned).*  
 > ⁽²⁾ *Skill planned but not yet implemented. The routing engine should fall back to the closest matching existing skill.*
 
 **Adaptive Adjustments:**

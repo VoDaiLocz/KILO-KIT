@@ -39,12 +39,12 @@ Let's create a simple "greeting" skill that helps the AI greet users appropriate
 ### Create the Directory
 
 ```bash
-mkdir -p src/skills/examples/greeting
+mkdir -p skills/kilo-kit/examples/greeting
 ```
 
 ### Create SKILL.md
 
-Create `src/skills/examples/greeting/SKILL.md`:
+Create `skills/kilo-kit/examples/greeting/SKILL.md`:
 
 ```yaml
 ---
@@ -164,7 +164,7 @@ Now let's add more sophistication.
 
 ### Add a Reference Document
 
-Create `src/skills/examples/greeting/references/localization.md`:
+Create `skills/kilo-kit/examples/greeting/references/localization.md`:
 
 ```markdown
 # Greeting Localization
@@ -212,7 +212,7 @@ Update your SKILL.md to include:
 
 - Learn about [Compound Behaviors](../intermediate/behavior-composition.md)
 - Create a more complex skill
-- Explore existing skills in `src/skills/`
+- Explore existing skills in `skills/kilo-kit/`
 
 ---
 

@@ -9,9 +9,9 @@ Usage:
     python validate-skill.py --all [--fix]
 
 Examples:
-    python validate-skill.py src/skills/debugging/systematic/
-    python validate-skill.py src/skills/ --all
-    python validate-skill.py src/skills/my-skill/ --fix --verbose
+    python validate-skill.py skills/kilo-kit/debugging/systematic/
+    python validate-skill.py skills/kilo-kit/ --all
+    python validate-skill.py skills/kilo-kit/my-skill/ --fix --verbose
 """
 
 import argparse

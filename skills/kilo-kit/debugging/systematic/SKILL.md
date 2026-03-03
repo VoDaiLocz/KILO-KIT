@@ -330,9 +330,9 @@ Before claiming the bug is fixed:
 
 ## Related Skills
 
-- `skills/debugging/root-cause/` - For deeper root cause analysis
-- `skills/debugging/verification/` - For thorough verification
-- `skills/quality/testing/` - For writing better tests
+- `skills/kilo-kit/debugging/root-cause/` - For deeper root cause analysis
+- `skills/kilo-kit/debugging/verification/` - For thorough verification
+- `skills/kilo-kit/quality/testing/` - For writing better tests
 
 ---
 

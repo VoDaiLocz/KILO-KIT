@@ -51,7 +51,28 @@ kilo-kit/
 ├── CONTRIBUTING.md             # Contribution guidelines
 ├── CHANGELOG.md                # Version history
 │
-├── src/                        # Source code
+├── .claude-plugin/             # Claude Code entry point
+│   └── instructions.md
+├── .cursor-plugin/             # Cursor IDE entry point
+│   └── instructions.md
+├── .codex/                     # OpenAI Codex entry point
+│   └── instructions.md
+├── .opencode/                  # OpenCode entry point
+│   └── instructions.md
+│
+├── skills/                     # Installable skill packs
+│   └── kilo-kit/               # Core Kilo-Kit skills
+│       ├── _template/          # Skill template
+│       ├── debugging/          # Debugging skills
+│       ├── development/        # Development skills
+│       └── quality/            # Quality assurance skills
+│
+├── commands/                   # Workflow commands
+│   ├── quality-gate.md         # Quality gate workflow
+│   ├── init-skill.md           # Skill initialization
+│   └── validate-skill.md       # Skill validation
+│
+├── src/                        # Core system source
 │   ├── core/                   # Core system components
 │   │   ├── KILO_MASTER.md     # Master skill file (entry point)
 │   │   ├── predictive-engine/  # Predictive Context Engine
@@ -63,12 +84,6 @@ kilo-kit/
 │   │   ├── atomic/             # Smallest behavior units
 │   │   ├── compound/           # Combined behaviors
 │   │   └── meta/               # Meta-behaviors
-│   │
-│   ├── skills/                 # Modular skill system
-│   │   ├── _template/          # Skill template
-│   │   ├── debugging/          # Debugging skills
-│   │   ├── development/        # Development skills
-│   │   └── quality/            # Quality assurance skills
 │   │
 │   └── tools/                  # CLI and utility tools
 │       ├── init-skill.py       # Skill initializer
@@ -118,14 +133,14 @@ Skills are automatically loaded when your task matches their keywords. See the [
 
 | Task Keywords | Skill to Load |
 |---------------|---------------|
-| `bug, error, fix, debug` | `skills/debugging/systematic/` |
-| `validate, validation` | `skills/debugging/systematic/` |
-| `root cause, why` | `skills/debugging/root-cause/` |
-| `verify, confirm` | `skills/debugging/verification/` |
-| `review, PR, code review` | `skills/quality/code-review/` |
-| `test, TDD, testing` | `skills/quality/testing/` |
-| `security, auth, OWASP` | `skills/development/security/` |
-| `API, backend, server` | `skills/development/backend/` |
+| `bug, error, fix, debug` | `skills/kilo-kit/debugging/systematic/` |
+| `validate, validation` | `skills/kilo-kit/debugging/systematic/` |
+| `root cause, why` | `skills/kilo-kit/debugging/root-cause/` |
+| `verify, confirm` | `skills/kilo-kit/debugging/verification/` |
+| `review, PR, code review` | `skills/kilo-kit/quality/code-review/` |
+| `test, TDD, testing` | `skills/kilo-kit/quality/testing/` |
+| `security, auth, OWASP` | `skills/kilo-kit/development/security/` |
+| `API, backend, server` | `skills/kilo-kit/development/backend/` |
 
 ## 🎓 Core Principles
 
@@ -174,7 +189,7 @@ Level 3: References/Scripts (on-demand, unlimited)
 Use the skill template:
 
 ```bash
-python src/tools/init-skill.py my-skill --path ./src/skills/
+python src/tools/init-skill.py my-skill --path ./skills/kilo-kit/
 ```
 
 This creates:

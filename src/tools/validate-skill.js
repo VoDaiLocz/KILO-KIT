@@ -7,7 +7,7 @@
  * Usage:
  *   node validate-skill.js <skill-path>
  *   node validate-skill.js --all <skills-directory>
- *   node validate-skill.js src/skills/debugging/systematic --verbose
+ *   node validate-skill.js skills/kilo-kit/debugging/systematic --verbose
  */
 
 const fs = require('fs');
@@ -405,9 +405,9 @@ Options:
   --help, -h     Show this help
 
 Examples:
-  node validate-skill.js src/skills/debugging/systematic
-  node validate-skill.js --all src/skills
-  node validate-skill.js src/skills/debugging/systematic --verbose
+  node validate-skill.js skills/kilo-kit/debugging/systematic
+  node validate-skill.js --all skills/kilo-kit
+  node validate-skill.js skills/kilo-kit/debugging/systematic --verbose
 `);
         process.exit(0);
     }
