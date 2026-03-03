@@ -55,7 +55,7 @@
 
 **Optimization tips for large codebases:**
 - Use `.gitignore`-aware file listing to skip `node_modules`, `dist`, etc.
-- Limit `find` depth to 3 levels for initial scan
+- Limit `find` depth to 2 levels for initial scan (matches `SKILL.md` pre-flight pattern; increase to 3 only for monorepos)
 - Use `git diff` to focus on recently changed files
 - Cache project structure between tasks in the same session
 

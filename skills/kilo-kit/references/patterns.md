@@ -18,7 +18,7 @@ pre_flight:
       fail_if: "usage > 90%"
     - name: Check memory
       command: "free -m"
-      fail_if: "available < 256MB"
+      fail_if: "available < 256MB"  # Minimum for running build tools + tests concurrently
     - name: Check runtime versions
       command: "node --version && python3 --version"
       fail_if: "version below minimum"
