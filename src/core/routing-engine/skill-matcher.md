@@ -96,12 +96,10 @@ keyword_matching:
 intent_type_matching:
   mapping:
     DEBUG: ["debugging/*", "quality/testing"]
-    DEVELOP: ["development/*", "architecture/*"]
+    DEVELOP: ["development/*"]
     REVIEW: ["quality/code-review"]
     TEST: ["quality/testing"]
     SECURITY: ["development/security"]
-    DEPLOY: ["automation/devops"]
-    DOCUMENT: ["quality/documentation"]
   
   scoring:
     primary_match: 1.0      # Skill category matches intent type
@@ -314,7 +312,7 @@ ranking:
 skill_match_result:
   selected_skill:
     id: "debugging/systematic"
-    confidence: 0.94
+    confidence: 0.97
     reason: "High keyword match + successful history + security context boost"
   
   alternatives:
@@ -333,9 +331,9 @@ skill_match_result:
     context_fit: 0.95 × 0.15 = 0.143
     user_pref: 0.6 × 0.10 = 0.060
     subtotal: 0.816
-    security_boost: +0.30
+    security_boost: +0.15
     no_penalties: 0
-    final: 0.94 (capped at 1.0 if over)
+    final: 0.97 (capped at 1.0 if over)
   
   decision_logged: "DEC-20260130-101532-abc12345"
 ```

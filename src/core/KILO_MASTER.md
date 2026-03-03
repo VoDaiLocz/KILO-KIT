@@ -169,19 +169,22 @@ output:
 | Intent Keywords | Primary Skill | Confidence Boost |
 |-----------------|---------------|------------------|
 | `bug, error, fix, debug, broken` | `skills/debugging/systematic/` | +0.15 if recent test failure |
-| `validate, validation, check` | `skills/debugging/defense-in-depth/` | +0.10 if security context |
 | `root cause, why, understand` | `skills/debugging/root-cause/` | +0.20 if 3rd+ fix attempt |
 | `verify, confirm, done` | `skills/debugging/verification/` | +0.25 if completion claimed |
 | `review, PR, code review` | `skills/quality/code-review/` | +0.15 if git context |
 | `test, TDD, testing` | `skills/quality/testing/` | +0.10 if new feature |
 | `security, auth, OWASP` | `skills/development/security/` | +0.30 if auth-related |
 | `API, backend, server` | `skills/development/backend/` | +0.05 if TypeScript/Python |
-| `frontend, UI, React` | `skills/development/frontend/` | +0.10 if component work |
-| `database, SQL, query` | `skills/development/database/` | +0.15 if performance issue |
-| `architecture, design` | `skills/architecture/system-design/` | +0.20 if greenfield |
-| `scale, microservices` | `skills/architecture/scalability/` | +0.25 if load mentioned |
-| `CI/CD, deploy, Docker` | `skills/automation/devops/` | +0.10 if config files |
-| `context, token, optimize` | `skills/automation/context-engineering/` | +0.30 if budget warning |
+| `validate, validation, check` | `skills/debugging/systematic/` ⁽¹⁾ | +0.10 if security context |
+| `frontend, UI, React` | `skills/development/frontend/` ⁽²⁾ | +0.10 if component work |
+| `database, SQL, query` | `skills/development/database/` ⁽²⁾ | +0.15 if performance issue |
+| `architecture, design` | `skills/architecture/system-design/` ⁽²⁾ | +0.20 if greenfield |
+| `scale, microservices` | `skills/architecture/scalability/` ⁽²⁾ | +0.25 if load mentioned |
+| `CI/CD, deploy, Docker` | `skills/automation/devops/` ⁽²⁾ | +0.10 if config files |
+| `context, token, optimize` | `skills/automation/context-engineering/` ⁽²⁾ | +0.30 if budget warning |
+
+> ⁽¹⁾ *Routed to closest existing skill. Originally mapped to `skills/debugging/defense-in-depth/` (planned).*  
+> ⁽²⁾ *Skill planned but not yet implemented. The routing engine should fall back to the closest matching existing skill.*
 
 **Adaptive Adjustments:**
 - Skills with >80% success rate get +0.10 boost
@@ -258,24 +261,29 @@ if_gate_fails:
 | `search_code` | Search codebase | ~100 |
 | `read_file` | Read file content | ~20 |
 | `write_file` | Write file content | ~30 |
-| `run_cmd` | Execute command | ~40 |
-| `validate` | Validate data/code | ~60 |
+| `run_command` | Execute command | ~40 |
+| `list_dir` | List directory contents | ~15 |
+| `validate_syntax` | Validate code syntax | ~60 |
+| `validate_data` | Validate data against schema | ~50 |
 | `reason` | Logical reasoning | ~200 |
 | `generate` | Generate content | ~300 |
+| `compare` | Compare two items | ~80 |
+| `summarize` | Summarize content | ~100 |
+| `ask_user` | Request user clarification | ~30 |
 
 ### Compound Behaviors (Composable)
 
 ```yaml
 trace_error:
-  components: [parse_input, search_code, reason]
+  components: [parse_input, search_code, read_file, reason]
   purpose: Trace error to source
 
 modify_safely:
-  components: [read_file, validate, write_file, validate]
+  components: [read_file, validate_syntax, write_file, run_command]
   purpose: Safe file modification
 
 test_change:
-  components: [write_file, run_cmd, parse_input]
+  components: [write_file, run_command, parse_input, compare]
   purpose: Write and test change
 ```
 
