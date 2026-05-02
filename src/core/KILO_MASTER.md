@@ -166,6 +166,8 @@ output:
 
 ## 📋 Skill Dispatch Table (Adaptive)
 
+Before broad discovery, read `skills/SKILLS_INDEX.md` and load only the relevant `SKILL.md` files. `skills/kilo-kit/` remains the core framework pack; category folders under `skills/` provide the expanded imported skill library.
+
 | Intent Keywords | Primary Skill | Confidence Boost |
 |-----------------|---------------|------------------|
 | `bug, error, fix, debug, broken` | `skills/kilo-kit/debugging/systematic/` | +0.15 if recent test failure |

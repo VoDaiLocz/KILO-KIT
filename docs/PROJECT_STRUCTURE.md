@@ -1,7 +1,7 @@
 # 📁 Kilo-Kit Project Structure
 
 > **Last Updated:** 2026-03-03  
-> **Total Files:** 45  
+> **Total Files:** Core framework plus imported skill library
 > **Status:** ✅ Complete
 
 ---
@@ -27,26 +27,38 @@ kilo-kit/
 │   └── instructions.md                       # Plugin instructions
 │
 ├── 💡 skills/                                # Installable skill packs
-│   └── kilo-kit/                             # Core Kilo-Kit skills
-│       ├── _template/
-│       │   └── SKILL.md                      # Skill template
-│       ├── debugging/                        # Debugging Skills
-│       │   ├── systematic/
-│       │   │   └── SKILL.md                  # 4-phase debugging
-│       │   ├── root-cause/
-│       │   │   └── SKILL.md                  # 5 Whys & Fishbone
-│       │   └── verification/
-│       │       └── SKILL.md                  # Fix verification
-│       ├── development/                      # Development Skills
-│       │   ├── backend/
-│       │   │   └── SKILL.md                  # Backend API dev
-│       │   └── security/
-│       │       └── SKILL.md                  # Security best practices
-│       └── quality/                          # Quality Skills
-│           ├── code-review/
-│           │   └── SKILL.md                  # Code review checklist
-│           └── testing/
-│               └── SKILL.md                  # Testing strategy
+│   ├── README.md                             # Human-facing skill catalog
+│   ├── SKILLS_INDEX.md                       # Lightweight agent skill index
+│   ├── kilo-kit/                             # Core Kilo-Kit skills
+│   │   ├── _template/
+│   │   │   └── SKILL.md                      # Skill template
+│   │   ├── debugging/                        # Debugging Skills
+│   │   │   ├── systematic/
+│   │   │   │   └── SKILL.md                  # 4-phase debugging
+│   │   │   ├── root-cause/
+│   │   │   │   └── SKILL.md                  # 5 Whys & Fishbone
+│   │   │   └── verification/
+│   │   │       └── SKILL.md                  # Fix verification
+│   │   ├── development/                      # Development Skills
+│   │   │   ├── backend/
+│   │   │   │   └── SKILL.md                  # Backend API dev
+│   │   │   └── security/
+│   │   │       └── SKILL.md                  # Security best practices
+│   │   └── quality/                          # Quality Skills
+│   │       ├── code-review/
+│   │       │   └── SKILL.md                  # Code review checklist
+│   │       └── testing/
+│   │           └── SKILL.md                  # Testing strategy
+│   ├── engineering/                          # Imported engineering skills
+│   ├── productivity/                         # Imported workflow skills
+│   ├── problem-solving/                      # Imported reasoning/debugging skills
+│   ├── design/                               # Imported design/frontend skills
+│   ├── games/                                # Imported game development skills
+│   ├── operations/                           # Imported ops/tooling skills
+│   ├── writing-docs/                         # Imported docs/presentation skills
+│   ├── ai-media/                             # Imported AI/media skills
+│   ├── security/                             # Imported security skills
+│   └── agent-frameworks/                     # Imported agent framework skills
 │
 ├── ⚡ commands/                               # Workflow commands
 │   ├── quality-gate.md                       # Quality gate workflow
@@ -127,14 +139,21 @@ kilo-kit/
 | `.codex/` | OpenAI Codex | Entry point for Codex integration |
 | `.opencode/` | OpenCode | Entry point for OpenCode integration |
 
-### 💡 Skills (8 files)
+### 💡 Skills
 
 | Category | Skills |
 |----------|--------|
-| Template | `skills/kilo-kit/_template/SKILL.md` |
-| Debugging | `systematic`, `root-cause`, `verification` |
-| Development | `backend`, `security` |
-| Quality | `code-review`, `testing` |
+| Core framework | `skills/kilo-kit/` |
+| Imported catalog | `skills/README.md` |
+| Agent index | `skills/SKILLS_INDEX.md` |
+| Engineering | `skills/engineering/` |
+| Productivity | `skills/productivity/` |
+| Problem solving | `skills/problem-solving/` |
+| Design | `skills/design/` |
+| Games | `skills/games/` |
+| Operations | `skills/operations/` |
+| Writing and docs | `skills/writing-docs/` |
+| AI and media | `skills/ai-media/` |
 
 ### ⚡ Commands (3 files)
 

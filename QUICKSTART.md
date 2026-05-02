@@ -81,6 +81,12 @@ Expected answer should mention: **INTAKE → ROUTE → EXECUTE → LEARN**
 
 ## 🎯 Using Skills (5 minutes)
 
+### Browse the Skill Library
+
+The main catalog is `skills/README.md`. It groups the imported Codex skills by category and includes a per-skill install command.
+
+Agents should use `skills/SKILLS_INDEX.md` first. It is intentionally compact so an agent can choose one or two relevant skills without loading the entire library.
+
 ### How Skill Dispatch Works
 
 When you ask your AI agent something, Kilo-Kit automatically:

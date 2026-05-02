@@ -52,17 +52,27 @@ class ValidationResult:
             self.valid = False
 
 
-# Required frontmatter fields
-REQUIRED_FRONTMATTER = ["name", "description", "version"]
-RECOMMENDED_FRONTMATTER = ["behaviors", "token_estimate", "dependencies"]
+# Required frontmatter fields.
+#
+# Modern agent skills, including Claude/Codex-compatible skills, commonly use
+# only `name` and `description`. Kilo-Kit core skills may include richer
+# metadata, but imported skill packs should not fail validation solely because
+# they omit framework-specific fields such as `version`.
+REQUIRED_FRONTMATTER = ["name", "description"]
+RECOMMENDED_FRONTMATTER = ["version", "behaviors", "token_estimate", "dependencies"]
 
-# Required sections in SKILL.md
-REQUIRED_SECTIONS = [
+# Required sections in SKILL.md.
+#
+# Keep this empty for library compatibility. Skills from different ecosystems
+# use headings such as Overview, Workflow, Quick start, Rules, or Reference map.
+# Those sections are useful and recommended below, but not required.
+REQUIRED_SECTIONS = []
+RECOMMENDED_SECTIONS = [
+    "Overview",
     "When to Use",
     "Process",
+    "Workflow",
     "Guidelines",
-]
-RECOMMENDED_SECTIONS = [
     "Prerequisites",
     "Success Criteria",
     "Related Skills",
@@ -136,8 +146,8 @@ def validate_frontmatter(frontmatter: Dict[str, Any], result: ValidationResult):
     for field in RECOMMENDED_FRONTMATTER:
         if field not in frontmatter:
             result.add_issue(
-                Severity.WARNING,
-                f"Missing recommended field: {field}",
+                Severity.INFO,
+                f"Optional metadata not present: {field}",
                 "frontmatter",
                 f"Consider adding '{field}:' for better skill discoverability"
             )
@@ -147,7 +157,7 @@ def validate_frontmatter(frontmatter: Dict[str, Any], result: ValidationResult):
         name = frontmatter["name"]
         if not re.match(r'^[a-z0-9-]+$', name):
             result.add_issue(
-                Severity.WARNING,
+                Severity.INFO,
                 f"Skill name '{name}' should be kebab-case (lowercase with dashes)",
                 "frontmatter.name",
                 "Use format like 'my-skill-name'"
@@ -161,7 +171,7 @@ def validate_frontmatter(frontmatter: Dict[str, Any], result: ValidationResult):
         
         if len(keywords) < MIN_KEYWORDS:
             result.add_issue(
-                Severity.WARNING,
+                Severity.INFO,
                 f"Description has {len(keywords)} keywords, recommend at least {MIN_KEYWORDS}",
                 "frontmatter.description",
                 "Add 'Keywords: keyword1, keyword2, keyword3' to description"

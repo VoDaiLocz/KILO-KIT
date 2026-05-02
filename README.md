@@ -42,6 +42,29 @@
 | **Security First** | Input validation, parameterized queries, no hardcoded secrets |
 | **Multi-Stack Support** | TypeScript, Python, .NET, Go ready |
 
+## 💡 Skill Library
+
+`skills/` is the canonical workflow surface for Kilo-Kit. It supports the same **Progressive Disclosure** model as the core framework: scan the index first, load one skill body when routed, then open references/scripts only when needed.
+
+| Layer | Purpose |
+|-------|---------|
+| `skills/kilo-kit/` | Core Kilo-Kit framework skills and Hard-Gate workflows |
+| `skills/<category>/<skill>/` | Expanded skill library organized by execution domain |
+| `skills/README.md` | Human-facing catalog with category summaries and install commands |
+| `skills/SKILLS_INDEX.md` | Lightweight agent index for Predictive Context Engine prefetching |
+
+### Install the Full Pack
+
+```bash
+npx skills@latest add VoDaiLocz/KILO-KIT
+```
+
+### Install a Single Skill
+
+```bash
+npx skills@latest add VoDaiLocz/KILO-KIT/skills/engineering/tdd
+```
+
 ## 📁 Project Structure
 
 ```
@@ -61,11 +84,18 @@ kilo-kit/
 │   └── instructions.md
 │
 ├── skills/                     # Installable skill packs
-│   └── kilo-kit/               # Core Kilo-Kit skills
-│       ├── _template/          # Skill template
-│       ├── debugging/          # Debugging skills
-│       ├── development/        # Development skills
-│       └── quality/            # Quality assurance skills
+│   ├── README.md               # Human-facing skill catalog
+│   ├── SKILLS_INDEX.md         # Lightweight agent skill index
+│   ├── kilo-kit/               # Core Kilo-Kit skills
+│   │   ├── _template/          # Skill template
+│   │   ├── debugging/          # Debugging skills
+│   │   ├── development/        # Development skills
+│   │   └── quality/            # Quality assurance skills
+│   ├── engineering/            # Engineering and framework skills
+│   ├── productivity/           # Agent workflow skills
+│   ├── problem-solving/        # Debugging/reasoning skills
+│   ├── design/                 # UI/design skills
+│   └── ...                     # Games, ops, docs, AI media, security
 │
 ├── commands/                   # Workflow commands
 │   ├── quality-gate.md         # Quality gate workflow
@@ -108,7 +138,7 @@ kilo-kit/
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/kilo-kit.git
+git clone https://github.com/VoDaiLocz/KILO-KIT.git
 cd kilo-kit
 
 # No dependencies required - works out of the box!

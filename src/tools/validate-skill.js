@@ -15,16 +15,23 @@ const path = require('path');
 
 // ============ Configuration ============
 
-const REQUIRED_FRONTMATTER = ['name', 'description', 'version'];
-const RECOMMENDED_FRONTMATTER = ['behaviors', 'token_estimate', 'dependencies'];
+// Modern agent skills, including Claude/Codex-compatible skills, commonly use
+// only `name` and `description`. Kilo-Kit core skills may include richer
+// metadata, but imported skill packs should not fail validation solely because
+// they omit framework-specific fields such as `version`.
+const REQUIRED_FRONTMATTER = ['name', 'description'];
+const RECOMMENDED_FRONTMATTER = ['version', 'behaviors', 'token_estimate', 'dependencies'];
 
-const REQUIRED_SECTIONS = [
-    'When to Use',
-    'Process|Workflow|TDD|OWASP',  // Accept alternatives
-    'Guidelines'
-];
+// Keep this empty for library compatibility. Skills from different ecosystems
+// use headings such as Overview, Workflow, Quick start, Rules, or Reference map.
+// Those sections are useful and recommended below, but not required.
+const REQUIRED_SECTIONS = [];
 
 const RECOMMENDED_SECTIONS = [
+    'Overview',
+    'When to Use',
+    'Process|Workflow|TDD|OWASP',
+    'Guidelines',
     'Prerequisites',
     'Success Criteria',
     'Related Skills'
@@ -172,14 +179,14 @@ function validateFrontmatter(frontmatter, result) {
     // Check recommended fields
     for (const field of RECOMMENDED_FRONTMATTER) {
         if (!frontmatter[field]) {
-            result.addIssue('warning', `Missing recommended field: ${field}`,
+            result.addIssue('info', `Optional metadata not present: ${field}`,
                 'frontmatter', `Consider adding '${field}:' for better discoverability`);
         }
     }
 
     // Validate name format (kebab-case)
     if (frontmatter.name && !/^[a-z0-9-]+$/.test(frontmatter.name)) {
-        result.addIssue('warning',
+        result.addIssue('info',
             `Skill name '${frontmatter.name}' should be kebab-case`,
             'frontmatter.name', 'Use format like "my-skill-name"');
     }
@@ -191,12 +198,12 @@ function validateFrontmatter(frontmatter, result) {
             const keywords = keywordsMatch[1].split(',').map(k => k.trim());
             result.metadata.keywords = keywords;
             if (keywords.length < 3) {
-                result.addIssue('warning',
+                result.addIssue('info',
                     `Only ${keywords.length} keywords found, recommend 3+`,
                     'frontmatter.description');
             }
         } else {
-            result.addIssue('warning',
+            result.addIssue('info',
                 'No keywords found in description',
                 'frontmatter.description',
                 'Add "Keywords: keyword1, keyword2, ..." to description');

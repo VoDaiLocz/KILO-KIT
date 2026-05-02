@@ -14,7 +14,14 @@ src/core/KILO_MASTER.md
 
 ## Skill Loading
 
-Skills are loaded from `skills/kilo-kit/` based on intent matching:
+`skills/` is the canonical workflow surface for Codex:
+
+- Use `skills/SKILLS_INDEX.md` for fast discovery.
+- Load the exact `skills/<category>/<skill>/SKILL.md` file needed for the task.
+- Keep `skills/kilo-kit/` as the core framework pack.
+- Use category folders such as `skills/engineering/`, `skills/productivity/`, and `skills/problem-solving/` for the imported Codex skill library.
+
+Core Kilo-Kit skills are loaded from `skills/kilo-kit/` based on intent matching:
 
 | Task Keywords | Skill |
 |---------------|-------|
@@ -25,6 +32,8 @@ Skills are loaded from `skills/kilo-kit/` based on intent matching:
 | `test, TDD, testing` | `skills/kilo-kit/quality/testing/` |
 | `security, auth, OWASP` | `skills/kilo-kit/development/security/` |
 | `API, backend, server` | `skills/kilo-kit/development/backend/` |
+
+For the broader imported library, prefer `skills/SKILLS_INDEX.md` over scanning all skill bodies.
 
 ## Commands
 
