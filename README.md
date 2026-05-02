@@ -53,10 +53,22 @@
 | `skills/README.md` | Human-facing catalog with category summaries and install commands |
 | `skills/SKILLS_INDEX.md` | Lightweight agent index for Predictive Context Engine prefetching |
 
-### Install the Full Pack
+### Install the Full Skill Library
+
+This installs every valid `SKILL.md` under `skills/`, including Kilo-Kit core skills and the expanded category library.
 
 ```bash
 npx skills@latest add VoDaiLocz/KILO-KIT
+```
+
+Use this when you want the entire Kilo-Kit workflow surface available in your agents.
+
+### Install a Category
+
+Use a category path when you only want one execution domain:
+
+```bash
+npx skills@latest add VoDaiLocz/KILO-KIT/skills/engineering
 ```
 
 ### Install a Single Skill
