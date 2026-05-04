@@ -2,6 +2,25 @@
   <img src="assets/social-preview.png" alt="Kilo-Kit social preview" width="100%">
 </p>
 
+<p align="center">
+  <a href="https://github.com/VoDaiLocz/KILO-KIT/stargazers"><img src="https://img.shields.io/github/stars/VoDaiLocz/KILO-KIT?style=for-the-badge&logo=github&label=Stars&color=18181b&labelColor=0f172a" alt="GitHub stars"></a>
+  <a href="https://github.com/VoDaiLocz/KILO-KIT/commits/main"><img src="https://img.shields.io/github/last-commit/VoDaiLocz/KILO-KIT?style=for-the-badge&logo=git&label=Last%20commit&color=22c55e&labelColor=0f172a" alt="Last commit"></a>
+  <a href="https://github.com/VoDaiLocz/KILO-KIT/graphs/contributors"><img src="https://img.shields.io/github/contributors/VoDaiLocz/KILO-KIT?style=for-the-badge&logo=github&label=Contributors&color=f97316&labelColor=0f172a" alt="Contributors"></a>
+  <a href="https://github.com/VoDaiLocz/KILO-KIT/actions/workflows/publish.yml"><img src="https://img.shields.io/github/actions/workflow/status/VoDaiLocz/KILO-KIT/publish.yml?style=for-the-badge&logo=githubactions&label=Publish&color=22c55e&labelColor=0f172a" alt="Publish workflow"></a>
+  <a href="https://www.npmjs.com/package/@vodailoc/kilo-kit-mcp"><img src="https://img.shields.io/npm/v/@vodailoc/kilo-kit-mcp?style=for-the-badge&logo=npm&label=npm&color=ef4444&labelColor=0f172a" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/@vodailoc/kilo-kit-mcp"><img src="https://img.shields.io/npm/dm/@vodailoc/kilo-kit-mcp?style=for-the-badge&logo=npm&label=downloads&color=0284c7&labelColor=0f172a" alt="npm downloads"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/VoDaiLocz/KILO-KIT?style=for-the-badge&label=License&color=64748b&labelColor=0f172a" alt="License"></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/skills-134-06b6d4?style=for-the-badge&labelColor=0f172a" alt="134 skills">
+  <img src="https://img.shields.io/badge/MCP-ready-14b8a6?style=for-the-badge&logo=modelcontextprotocol&labelColor=0f172a" alt="MCP ready">
+  <img src="https://img.shields.io/badge/Codex-ready-111827?style=for-the-badge&logo=openai&labelColor=0f172a" alt="Codex ready">
+  <img src="https://img.shields.io/badge/Trusted%20Publishing-OIDC-8b5cf6?style=for-the-badge&logo=githubactions&labelColor=0f172a" alt="Trusted publishing">
+  <img src="https://img.shields.io/badge/Node-%3E%3D20-339933?style=for-the-badge&logo=nodedotjs&labelColor=0f172a" alt="Node >=20">
+  <img src="https://img.shields.io/badge/TypeScript-5.9-3178c6?style=for-the-badge&logo=typescript&labelColor=0f172a" alt="TypeScript 5.9">
+</p>
+
 # 🚀 Kilo-Kit: Professional AI Agent Development Framework
 
 > **Version:** 1.0.0  
