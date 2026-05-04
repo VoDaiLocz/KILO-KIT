@@ -1,6 +1,6 @@
 # 🔌 Kilo-Kit MCP Server
 
-> **Version:** 1.1.0
+> **Version:** 1.1.1
 > **Mode:** Read-only Skill Registry + Validator
 > **Transport:** stdio
 
@@ -70,6 +70,18 @@ Use the published npm package in any MCP-capable client:
 ```
 
 The npm package includes the Kilo-Kit skill library, core master file, validator, and built MCP server.
+
+### Codex CLI on Windows
+
+When Codex is opened inside the Kilo-Kit source checkout, `npx -y @vodailoc/kilo-kit-mcp` can resolve the local package instead of the published package. Use an npm prefix outside the repository:
+
+```toml
+[mcp_servers.kilo-kit]
+command = "npm"
+args = ["exec", "--prefix", "C:\\Users\\Admin", "--yes", "--package=@vodailoc/kilo-kit-mcp", "--", "kilo-kit-mcp"]
+startup_timeout_sec = 60
+enabled = true
+```
 
 Maintainers publish the npm package from the repository root:
 

@@ -173,7 +173,7 @@ Skills are automatically loaded when your task matches their keywords. See the [
 
 ## 🔌 MCP Integration
 
-Kilo-Kit v1.1.0 includes a read-only MCP server that exposes the skill library as an adaptive routing service for MCP-capable agents.
+Kilo-Kit v1.1.1 includes a read-only MCP server that exposes the skill library as an adaptive routing service for MCP-capable agents.
 
 | MCP Surface | Purpose |
 |-------------|---------|
@@ -196,6 +196,18 @@ Install from npm in any MCP-capable client:
   }
 }
 ```
+
+Recommended Codex CLI config on Windows:
+
+```toml
+[mcp_servers.kilo-kit]
+command = "npm"
+args = ["exec", "--prefix", "C:\\Users\\Admin", "--yes", "--package=@vodailoc/kilo-kit-mcp", "--", "kilo-kit-mcp"]
+startup_timeout_sec = 60
+enabled = true
+```
+
+The `--prefix` keeps npm from resolving the local source checkout when Codex is opened inside the Kilo-Kit repository.
 
 For local development, build and verify:
 

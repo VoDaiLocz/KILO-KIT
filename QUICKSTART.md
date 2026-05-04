@@ -92,6 +92,16 @@ Kilo-Kit ships a read-only MCP server for skill routing and validation:
 }
 ```
 
+For Codex CLI on Windows, prefer this TOML block:
+
+```toml
+[mcp_servers.kilo-kit]
+command = "npm"
+args = ["exec", "--prefix", "C:\\Users\\Admin", "--yes", "--package=@vodailoc/kilo-kit-mcp", "--", "kilo-kit-mcp"]
+startup_timeout_sec = 60
+enabled = true
+```
+
 For local development:
 
 ```bash

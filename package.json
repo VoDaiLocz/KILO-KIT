@@ -1,6 +1,6 @@
 {
   "name": "@vodailoc/kilo-kit-mcp",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Kilo-Kit MCP server for adaptive skill routing, skill loading, and validation.",
   "license": "Apache-2.0",
   "author": "Kilo-Kit Team",
@@ -20,6 +20,7 @@
     "README.md",
     "QUICKSTART.md",
     ".mcp/kilo-kit.example.json",
+    ".mcp/kilo-kit.codex-windows.toml",
     "mcp/README.md",
     "mcp/package.json",
     "mcp/dist/",

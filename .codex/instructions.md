@@ -50,7 +50,7 @@ See `src/core/KILO_MASTER.md` for the full Cognitive Flow Architecture.
 
 Kilo-Kit exposes a read-only MCP server in `mcp/`.
 
-Install from npm in MCP-capable clients:
+Install from npm in generic MCP-capable clients:
 
 ```json
 {
@@ -61,6 +61,16 @@ Install from npm in MCP-capable clients:
     }
   }
 }
+```
+
+For Codex CLI on Windows, prefer the npm exec form so the source checkout does not shadow the published package:
+
+```toml
+[mcp_servers.kilo-kit]
+command = "npm"
+args = ["exec", "--prefix", "C:\\Users\\Admin", "--yes", "--package=@vodailoc/kilo-kit-mcp", "--", "kilo-kit-mcp"]
+startup_timeout_sec = 60
+enabled = true
 ```
 
 Build and verify:
