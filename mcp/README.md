@@ -83,14 +83,26 @@ startup_timeout_sec = 60
 enabled = true
 ```
 
-Maintainers publish the npm package from the repository root:
+### Publishing
+
+Kilo-Kit publishes through npm Trusted Publishing, so releases do not require a long-lived npm token or an interactive OTP.
+
+Configure the npm package once:
+
+1. Open `@vodailoc/kilo-kit-mcp` on npm.
+2. Go to `Settings` -> `Trusted publishing`.
+3. Select `GitHub Actions`.
+4. Use repository `VoDaiLocz/KILO-KIT`.
+5. Use workflow filename `publish.yml`.
+
+Then publish by running the GitHub Actions workflow `Publish npm package`, or by pushing a version tag:
 
 ```bash
-npm login
-npm publish --access public
+git tag v1.1.1
+git push origin v1.1.1
 ```
 
-The root `prepublishOnly` gate runs build, typecheck, tests, smoke, and skill validation before npm accepts the publish.
+The workflow runs build, typecheck, tests, smoke, skill validation, package dry-run, and then `npm publish --access public --ignore-scripts` through OIDC.
 
 ### Local Development
 

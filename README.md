@@ -237,6 +237,18 @@ Local client config template:
 
 See [mcp/README.md](./mcp/README.md) and [.mcp/kilo-kit.example.json](./.mcp/kilo-kit.example.json).
 
+### Maintainer Release Flow
+
+Kilo-Kit publishes `@vodailoc/kilo-kit-mcp` through npm Trusted Publishing. Configure npm once with:
+
+| Field | Value |
+|-------|-------|
+| Provider | GitHub Actions |
+| Repository | `VoDaiLocz/KILO-KIT` |
+| Workflow filename | `publish.yml` |
+
+After that, run the GitHub Actions workflow `Publish npm package`, or push a version tag such as `v1.1.1`. The workflow uses OIDC, so it does not need an npm token or interactive OTP.
+
 ## 📋 Skill Dispatch Table
 
 | Task Keywords | Skill to Load |

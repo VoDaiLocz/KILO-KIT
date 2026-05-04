@@ -1,0 +1,50 @@
+name: Publish npm package
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: npm-publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'VoDaiLocz/KILO-KIT'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Verify toolchain
+        run: |
+          node --version
+          npm --version
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install MCP dependencies
+        run: npm --prefix mcp ci
+
+      - name: Run release verification
+        run: npm run prepublishOnly
+
+      - name: Check package contents
+        run: npm pack --dry-run
+
+      - name: Publish to npm with trusted publishing
+        run: npm publish --access public --ignore-scripts
