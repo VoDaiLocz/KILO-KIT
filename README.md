@@ -184,7 +184,20 @@ Kilo-Kit v1.1.0 includes a read-only MCP server that exposes the skill library a
 | `kilo://skills/index` | Resource view of the lightweight skill index |
 | `kilo://skills/{category}/{skill}` | Resource view for one skill |
 
-Build and verify:
+Install from npm in any MCP-capable client:
+
+```json
+{
+  "mcpServers": {
+    "kilo-kit": {
+      "command": "npx",
+      "args": ["-y", "@vodailoc/kilo-kit-mcp"]
+    }
+  }
+}
+```
+
+For local development, build and verify:
 
 ```bash
 cd mcp
@@ -194,7 +207,7 @@ npm test
 npm run smoke
 ```
 
-Client config template:
+Local client config template:
 
 ```json
 {

@@ -50,6 +50,19 @@ See `src/core/KILO_MASTER.md` for the full Cognitive Flow Architecture.
 
 Kilo-Kit exposes a read-only MCP server in `mcp/`.
 
+Install from npm in MCP-capable clients:
+
+```json
+{
+  "mcpServers": {
+    "kilo-kit": {
+      "command": "npx",
+      "args": ["-y", "@vodailoc/kilo-kit-mcp"]
+    }
+  }
+}
+```
+
 Build and verify:
 
 ```bash

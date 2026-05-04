@@ -81,6 +81,19 @@ Expected answer should mention: **INTAKE → ROUTE → EXECUTE → LEARN**
 
 Kilo-Kit ships a read-only MCP server for skill routing and validation:
 
+```json
+{
+  "mcpServers": {
+    "kilo-kit": {
+      "command": "npx",
+      "args": ["-y", "@vodailoc/kilo-kit-mcp"]
+    }
+  }
+}
+```
+
+For local development:
+
 ```bash
 cd mcp
 npm install
@@ -89,7 +102,7 @@ npm test
 npm run smoke
 ```
 
-Add `.mcp/kilo-kit.example.json` to your MCP-capable client config, replacing `<absolute-path-to-KILO-KIT>` with this repository path.
+Add `.mcp/kilo-kit.example.json` to your MCP-capable client config when you want the npm install form.
 
 ---
 

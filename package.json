@@ -1,0 +1,57 @@
+{
+  "name": "@vodailoc/kilo-kit-mcp",
+  "version": "1.1.0",
+  "description": "Kilo-Kit MCP server for adaptive skill routing, skill loading, and validation.",
+  "license": "Apache-2.0",
+  "author": "Kilo-Kit Team",
+  "homepage": "https://github.com/VoDaiLocz/KILO-KIT#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VoDaiLocz/KILO-KIT.git"
+  },
+  "bugs": {
+    "url": "https://github.com/VoDaiLocz/KILO-KIT/issues"
+  },
+  "bin": {
+    "kilo-kit-mcp": "mcp/dist/server.js"
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "QUICKSTART.md",
+    ".mcp/kilo-kit.example.json",
+    "mcp/README.md",
+    "mcp/package.json",
+    "mcp/dist/",
+    "skills/",
+    "src/core/KILO_MASTER.md",
+    "src/tools/validate-skill.js"
+  ],
+  "scripts": {
+    "mcp:install": "npm --prefix mcp install",
+    "mcp:build": "npm --prefix mcp run build",
+    "mcp:test": "npm --prefix mcp test",
+    "mcp:typecheck": "npm --prefix mcp run typecheck",
+    "mcp:smoke": "npm --prefix mcp run smoke",
+    "pack:dry-run": "npm pack --dry-run",
+    "prepack": "npm --prefix mcp ci && npm --prefix mcp run build",
+    "prepublishOnly": "npm run mcp:build && npm run mcp:typecheck && npm run mcp:test && npm run mcp:smoke && node src/tools/validate-skill.js --all skills"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.25.76"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "skills",
+    "ai-agent",
+    "kilo-kit"
+  ]
+}

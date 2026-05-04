@@ -2,8 +2,8 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
 const transport = new StdioClientTransport({
-  command: process.execPath,
-  args: ["dist/server.js"],
+  command: process.env.KILO_KIT_SMOKE_COMMAND ?? process.execPath,
+  args: parseSmokeArgs(),
 });
 
 const client = new Client({ name: "kilo-kit-smoke", version: "1.0.0" });
@@ -51,4 +51,18 @@ function extractFirstText(value: unknown): string {
   const content = (value as { content?: Array<{ type?: string; text?: string }> }).content;
   const first = content?.[0];
   return first?.type === "text" && first.text ? first.text : "";
+}
+
+function parseSmokeArgs(): string[] {
+  const rawArgs = process.env.KILO_KIT_SMOKE_ARGS;
+  if (!rawArgs) {
+    return ["dist/server.js"];
+  }
+
+  const parsed = JSON.parse(rawArgs) as unknown;
+  if (!Array.isArray(parsed) || !parsed.every((item) => typeof item === "string")) {
+    throw new Error("KILO_KIT_SMOKE_ARGS must be a JSON array of strings.");
+  }
+
+  return parsed;
 }

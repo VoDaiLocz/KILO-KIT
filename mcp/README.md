@@ -56,6 +56,32 @@ MCP smoke check passed.
 
 ## ⚙️ Client Configuration
 
+Use the published npm package in any MCP-capable client:
+
+```json
+{
+  "mcpServers": {
+    "kilo-kit": {
+      "command": "npx",
+      "args": ["-y", "@vodailoc/kilo-kit-mcp"]
+    }
+  }
+}
+```
+
+The npm package includes the Kilo-Kit skill library, core master file, validator, and built MCP server.
+
+Maintainers publish the npm package from the repository root:
+
+```bash
+npm login
+npm publish --access public
+```
+
+The root `prepublishOnly` gate runs build, typecheck, tests, smoke, and skill validation before npm accepts the publish.
+
+### Local Development
+
 Build first:
 
 ```bash
