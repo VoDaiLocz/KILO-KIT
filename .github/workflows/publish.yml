@@ -38,13 +38,13 @@ jobs:
         run: npm ci
 
       - name: Install MCP dependencies
-        run: npm --prefix mcp ci
+        run: npm --prefix mcp install --no-save --package-lock=false
 
       - name: Run release verification
         run: npm run prepublishOnly
 
       - name: Check package contents
-        run: npm pack --dry-run
+        run: npm pack --dry-run --ignore-scripts
 
       - name: Publish to npm with trusted publishing
         run: npm publish --access public --ignore-scripts
