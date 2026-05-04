@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/social-preview.png" alt="Kilo-Kit social preview" width="100%">
+</p>
+
 # 🚀 Kilo-Kit: Professional AI Agent Development Framework
 
 > **Version:** 1.0.0  
