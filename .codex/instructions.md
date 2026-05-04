@@ -46,6 +46,22 @@ Workflow commands are in `commands/`:
 
 See `src/core/KILO_MASTER.md` for the full Cognitive Flow Architecture.
 
+## MCP Integration
+
+Kilo-Kit exposes a read-only MCP server in `mcp/`.
+
+Build and verify:
+
+```bash
+cd mcp
+npm install
+npm run build
+npm test
+npm run smoke
+```
+
+When the MCP server is available, call `kilo_route_intent` with the current user request before selecting a workflow skill, then call `kilo_get_skill` for the selected skill.
+
 ---
 
 *Kilo-Kit Codex Plugin v1.0.0*

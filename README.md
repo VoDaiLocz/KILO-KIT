@@ -171,6 +171,47 @@ cp src/core/KILO_MASTER.md ~/.your-agent/KILO_MASTER.md
 
 Skills are automatically loaded when your task matches their keywords. See the [Skill Dispatch Table](#-skill-dispatch-table) below.
 
+## 🔌 MCP Integration
+
+Kilo-Kit v1.1.0 includes a read-only MCP server that exposes the skill library as an adaptive routing service for MCP-capable agents.
+
+| MCP Surface | Purpose |
+|-------------|---------|
+| `kilo_route_intent` | Route the current chat request to the best Kilo-Kit skills |
+| `kilo_search_skills` | Search the skill catalog by task or keyword |
+| `kilo_get_skill` | Load one exact `SKILL.md` with context-safe truncation |
+| `kilo_validate_skills` | Run the skill validation quality gate |
+| `kilo://skills/index` | Resource view of the lightweight skill index |
+| `kilo://skills/{category}/{skill}` | Resource view for one skill |
+
+Build and verify:
+
+```bash
+cd mcp
+npm install
+npm run build
+npm test
+npm run smoke
+```
+
+Client config template:
+
+```json
+{
+  "mcpServers": {
+    "kilo-kit": {
+      "command": "node",
+      "args": ["<absolute-path-to-KILO-KIT>/mcp/dist/server.js"],
+      "env": {
+        "KILO_KIT_REPO_ROOT": "<absolute-path-to-KILO-KIT>"
+      }
+    }
+  }
+}
+```
+
+See [mcp/README.md](./mcp/README.md) and [.mcp/kilo-kit.example.json](./.mcp/kilo-kit.example.json).
+
 ## 📋 Skill Dispatch Table
 
 | Task Keywords | Skill to Load |
@@ -326,7 +367,7 @@ We welcome contributions! Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for:
 ## 🏗️ Roadmap
 
 - [x] v1.0.0 - Core Cognitive Flow Architecture
-- [ ] v1.1.0 - MCP Integration
+- [x] v1.1.0 - MCP Integration
 - [ ] v1.2.0 - Multi-Agent Orchestration
 - [ ] v2.0.0 - Visual Workflow Builder
 

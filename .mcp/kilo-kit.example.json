@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "kilo-kit": {
+      "command": "node",
+      "args": ["<absolute-path-to-KILO-KIT>/mcp/dist/server.js"],
+      "env": {
+        "KILO_KIT_REPO_ROOT": "<absolute-path-to-KILO-KIT>"
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "@kilo-kit/mcp",
+  "version": "1.1.0",
+  "description": "Kilo-Kit MCP server for skill routing, skill loading, and validation.",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "kilo-kit-mcp": "./dist/server.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/server.js",
+    "smoke": "node dist/smoke.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

@@ -77,6 +77,20 @@ What are the 4 stages of Kilo-Kit's processing pipeline?
 
 Expected answer should mention: **INTAKE → ROUTE → EXECUTE → LEARN**
 
+### Optional: Enable MCP Routing
+
+Kilo-Kit ships a read-only MCP server for skill routing and validation:
+
+```bash
+cd mcp
+npm install
+npm run build
+npm test
+npm run smoke
+```
+
+Add `.mcp/kilo-kit.example.json` to your MCP-capable client config, replacing `<absolute-path-to-KILO-KIT>` with this repository path.
+
 ---
 
 ## 🎯 Using Skills (5 minutes)
