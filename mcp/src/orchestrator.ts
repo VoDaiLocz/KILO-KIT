@@ -6,12 +6,10 @@ import type { OrchestrationMemoryStore } from "./orchestration-memory.js";
 import type {
   MemorySuggestion,
   OrchestrationInput,
-  OrchestrationQuestion,
   OrchestrationResult,
   OrchestrationState,
   VerificationGate,
 } from "./orchestration-types.js";
-import { selectQuestionTemplate } from "./question-templates.js";
 import type { SkillRegistry } from "./registry.js";
 import { routeIntent } from "./router.js";
 import type { RouteIntentResult, RouteWorkflowStep, SkillRecord } from "./types.js";
@@ -32,7 +30,7 @@ interface OrchestrationSession {
   createdAt: string;
   route: RouteIntentResult;
   workflow: RouteWorkflowStep[];
-  questions: OrchestrationQuestion[];
+  brainstormingApproved: boolean;
   answers: Record<string, string>;
   memorySuggestions: MemorySuggestion[];
   memoryConfirmations: Record<string, "accepted" | "rejected">;
@@ -48,7 +46,7 @@ export function createOrchestrator(options: CreateOrchestratorOptions): KiloOrch
       const session = getOrCreateSession(sessions, options.registry, input);
       mergeInput(session, input);
 
-      const missingInfo = missingRequiredQuestionIds(session.questions, session.answers);
+      const missingInfo: string[] = [];
       const suggestions = ensureMemorySuggestions(options.memory, session);
       const pendingSuggestions = suggestions.filter(
         (suggestion) => session.memoryConfirmations[suggestion.key] === undefined,
@@ -57,15 +55,16 @@ export function createOrchestrator(options: CreateOrchestratorOptions): KiloOrch
         (suggestion) => session.memoryConfirmations[suggestion.key] === "accepted",
       );
 
-      const state = selectState(session, missingInfo, pendingSuggestions);
+      const state = selectState(session, pendingSuggestions);
       for (const [suggestionKey, decision] of Object.entries(input.memoryConfirmations ?? {})) {
         options.memory.recordDecision({ suggestionKey, decision });
       }
 
       const verificationGate = buildVerificationGate(acceptedSuggestions);
-      const finalWorkflow = state === "ready" ? session.workflow : undefined;
-      const firstSkillToLoad = finalWorkflow?.[0]?.skill;
-      const nextAction = buildNextAction(state, session, missingInfo, pendingSuggestions, firstSkillToLoad);
+      const finalWorkflow = state === "ready" ? executableWorkflow(session) : undefined;
+      const firstSkillToLoad =
+        state === "brainstorming_required" ? findSkillById(options.registry, "productivity/brainstorming") : finalWorkflow?.[0]?.skill;
+      const nextAction = buildNextAction(state, session, pendingSuggestions, firstSkillToLoad);
       persistSession(options.memory, session, state, verificationGate, finalWorkflow);
       const auditRef = audit.record({
         sessionId: session.sessionId,
@@ -80,7 +79,7 @@ export function createOrchestrator(options: CreateOrchestratorOptions): KiloOrch
         state,
         message: session.message,
         taskMode: session.route.taskMode,
-        questions: session.questions,
+        questions: [],
         missingInfo,
         route: session.route,
         workflow: session.workflow,
@@ -118,18 +117,13 @@ function getOrCreateSession(
     limit: 5,
   });
   const workflow = ensureBrainstormingFirst(registry, route.workflow, input);
-  const template = selectQuestionTemplate({
-    taskMode: route.taskMode,
-    workflowSkillIds: workflow.map((step) => step.skill.id),
-    recommendedSkillIds: route.recommended.map((item) => item.skill.id),
-  });
   const session: OrchestrationSession = {
     sessionId: input.sessionId ?? randomUUID(),
     message: input.message,
     createdAt: new Date().toISOString(),
     route,
     workflow,
-    questions: template.questions,
+    brainstormingApproved: input.brainstormingApproved === true,
     answers: {},
     memorySuggestions: [],
     memoryConfirmations: {},
@@ -154,7 +148,7 @@ function persistSession(
     message: session.message,
     taskMode: session.route.taskMode,
     route: toJsonObject(session.route),
-    questions: toJsonArray(session.questions),
+    questions: [],
     answers: { ...session.answers },
     memorySuggestions: session.memorySuggestions.map((suggestion) => ({ ...suggestion })),
     finalWorkflow: toJsonArray(finalWorkflow ?? []),
@@ -178,6 +172,7 @@ function persistSession(
 function mergeInput(session: OrchestrationSession, input: OrchestrationInput): void {
   session.message = input.message || session.message;
   session.answers = { ...session.answers, ...(input.answers ?? {}) };
+  session.brainstormingApproved = session.brainstormingApproved || input.brainstormingApproved === true;
   session.memoryConfirmations = { ...session.memoryConfirmations, ...(input.memoryConfirmations ?? {}) };
   if (input.context) {
     session.context = input.context;
@@ -202,14 +197,10 @@ function ensureMemorySuggestions(
 
 function selectState(
   session: OrchestrationSession,
-  missingInfo: string[],
   pendingSuggestions: MemorySuggestion[],
 ): OrchestrationState {
-  if (isSubstantiveWork(session) && Object.keys(session.answers).length === 0) {
+  if (isSubstantiveWork(session) && !session.brainstormingApproved) {
     return "brainstorming_required";
-  }
-  if (missingInfo.length > 0) {
-    return "questioning";
   }
   if (pendingSuggestions.length > 0) {
     return "awaiting_memory_confirmation";
@@ -231,7 +222,7 @@ function ensureBrainstormingFirst(
   const step = {
     skill: brainstorming,
     role: "prepare" as const,
-    reason: "C4 Brainstorming-First Gate requires design clarification before substantive work.",
+    reason: "Load and follow the real /brainstorming skill before substantive work.",
   };
 
   if (input.context?.mode === "brainstorming" || /\bbrainstorm(?:ing)?\b/i.test(input.message)) {
@@ -258,16 +249,6 @@ function findSkillById(registry: SkillRegistry, id: string): SkillRecord | undef
   }
 }
 
-function missingRequiredQuestionIds(
-  questions: OrchestrationQuestion[],
-  answers: Record<string, string>,
-): string[] {
-  return questions
-    .filter((question) => question.required)
-    .filter((question) => !answers[question.id]?.trim())
-    .map((question) => question.id);
-}
-
 function buildVerificationGate(acceptedSuggestions: MemorySuggestion[]): VerificationGate {
   const commands = acceptedSuggestions.flatMap((suggestion) => {
     const commands = suggestion.value.commands;
@@ -286,15 +267,11 @@ function buildVerificationGate(acceptedSuggestions: MemorySuggestion[]): Verific
 function buildNextAction(
   state: OrchestrationState,
   session: OrchestrationSession,
-  missingInfo: string[],
   pendingSuggestions: MemorySuggestion[],
   firstSkillToLoad: SkillRecord | undefined,
 ): string {
   if (state === "brainstorming_required") {
-    return `Start with productivity/brainstorming and answer required C4 questions: ${missingInfo.join(", ")}.`;
-  }
-  if (state === "questioning") {
-    return `Answer missing C4 questions before workflow execution: ${missingInfo.join(", ")}.`;
+    return "Load productivity/brainstorming with kilo_get_skill, follow its hard-gate, get user approval, then call kilo_orchestrate_task again with brainstormingApproved=true.";
   }
   if (state === "awaiting_memory_confirmation") {
     return `Accept or reject memory suggestions before execution: ${pendingSuggestions.map((item) => item.key).join(", ")}.`;
@@ -303,6 +280,14 @@ function buildNextAction(
     return `Load ${firstSkillToLoad.id} with kilo_get_skill, then follow the final workflow.`;
   }
   return session.route.nextAction;
+}
+
+function executableWorkflow(session: OrchestrationSession): RouteWorkflowStep[] {
+  if (!session.brainstormingApproved) {
+    return session.workflow;
+  }
+
+  return session.workflow.filter((step) => step.skill.id !== "productivity/brainstorming");
 }
 
 function isSubstantiveWork(session: OrchestrationSession): boolean {

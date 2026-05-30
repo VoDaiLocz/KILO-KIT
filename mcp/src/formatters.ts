@@ -180,15 +180,10 @@ export function formatOrchestration(result: OrchestrationResult, format: "markdo
     return JSON.stringify(result, null, 2);
   }
 
-  const questions =
-    result.questions.length > 0
-      ? result.questions
-          .map(
-            (question, index) =>
-              `${index + 1}. **${question.id}**${question.required ? " (required)" : ""}\n   ${question.prompt}`,
-          )
-          .join("\n")
-      : "No questions required.";
+  const brainstormingGate =
+    result.state === "brainstorming_required"
+      ? "Load `productivity/brainstorming` and follow the real skill hard-gate. C4 questions are not used as a separate questionnaire."
+      : "Brainstorming approval has been recorded or this is a read-only route.";
   const workflow =
     result.workflow.length > 0
       ? result.workflow.map((step, index) => `${index + 1}. **${step.skill.id}** (${step.role})\n   ${step.reason}`).join("\n")
@@ -214,8 +209,8 @@ export function formatOrchestration(result: OrchestrationResult, format: "markdo
     `State: \`${result.state}\``,
     `Task mode: \`${result.taskMode}\``,
     "",
-    "## Questions",
-    questions,
+    "## Brainstorming Gate",
+    brainstormingGate,
     "",
     "## Workflow",
     workflow,

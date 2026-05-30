@@ -1,6 +1,6 @@
 # 🔌 Kilo-Kit MCP Server
 
-> **Version:** 1.2.0
+> **Version:** 1.3.0
 > **Mode:** Read-only Skill Registry + Validator
 > **Transport:** stdio
 
@@ -12,7 +12,7 @@ The Kilo-Kit MCP server exposes the `skills/` workflow surface to MCP-capable ag
 
 | Capability | MCP Tool | Purpose |
 |------------|----------|---------|
-| C4 orchestration | `kilo_orchestrate_task` | Enforce brainstorming-first workflow, required questions, memory suggestions, and final workflow release |
+| C4 orchestration | `kilo_orchestrate_task` | Require the real `/brainstorming` skill before substantive work, then log/route the approved task and release the post-brainstorming workflow |
 | Skill discovery | `kilo_search_skills` | Search the skill library by task/query |
 | Intent routing | `kilo_route_intent` | Recommend skills, workflow order, rule hierarchy, and decision trail for the current chat context |
 | Skill loading | `kilo_get_skill` | Load one exact `SKILL.md` with output limits |
@@ -91,7 +91,7 @@ KILO_KIT_MEMORY_PATH=/absolute/path/orchestrator.sqlite
 KILO_KIT_ORCHESTRATION_AUDIT_PATH=/absolute/path/orchestration-audit.jsonl
 ```
 
-`kilo_orchestrate_task` uses the C4 Brainstorming-First Gate: substantive work starts with `productivity/brainstorming`, then required questions, then memory suggestions that require explicit accept/reject before a final workflow is released.
+`kilo_orchestrate_task` uses the C4 Brainstorming-First Gate as a skill gate, not a separate C4 questionnaire. Substantive work starts by loading and following `productivity/brainstorming`. After the user approves the brainstorming direction, call `kilo_orchestrate_task` again with `brainstormingApproved=true`; C4 then checks memory suggestions and releases the post-brainstorming workflow.
 
 ### Codex CLI on Windows
 
@@ -120,8 +120,8 @@ Configure the npm package once:
 Then publish by running the GitHub Actions workflow `Publish npm package`, or by pushing a version tag:
 
 ```bash
-git tag v1.2.0
-git push origin v1.2.0
+git tag v1.3.0
+git push origin v1.3.0
 ```
 
 The workflow runs build, typecheck, tests, smoke, skill validation, package dry-run, and then `npm publish --access public --ignore-scripts` through OIDC.
@@ -173,10 +173,11 @@ Use `.mcp/kilo-kit.example.json` as the portable template.
 
 ```text
 User request
-→ kilo_orchestrate_task(message, context)
-→ answer required C4 questions
-→ accept/reject memory suggestions
-→ kilo_get_skill(category, skill) for the first workflow skill
+→ kilo_get_skill(productivity, brainstorming)
+→ follow the real /brainstorming hard gate and get user approval
+→ kilo_orchestrate_task(message, context, brainstormingApproved=true)
+→ accept/reject memory suggestions when relevant
+→ kilo_get_skill(category, skill) for the first post-brainstorming workflow skill
 → follow final workflow skills in order
 → kilo_route_report when you need routing analytics
 → kilo_memory_report when you need memory analytics

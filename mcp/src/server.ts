@@ -28,7 +28,7 @@ import { routeIntent } from "./router.js";
 import { validateSkills } from "./validator.js";
 import type { ResponseFormat } from "./types.js";
 
-const SERVER_VERSION = "1.2.0";
+const SERVER_VERSION = "1.3.0";
 const DEFAULT_REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
 const formatSchema = z.enum(["markdown", "json"]).default("markdown");
@@ -76,7 +76,7 @@ export async function createKiloKitServer(options: CreateKiloKitServerOptions = 
     {
       title: "Kilo-Kit C4 Orchestrate Task",
       description:
-        "Central C4 orchestration gate. Routes internally, enforces brainstorming-first, asks required questions, checks memory suggestions, and releases a final workflow only after confirmation.",
+        "Central C4 orchestration gate. Routes internally, requires the real /brainstorming skill before substantive work, checks memory suggestions, and releases the post-brainstorming workflow after approval.",
       inputSchema: {
         message: z.string().min(1).max(4000).describe("Current user request or task summary."),
         context: z
@@ -88,6 +88,7 @@ export async function createKiloKitServer(options: CreateKiloKitServerOptions = 
           })
           .optional(),
         sessionId: z.string().min(1).max(120).optional(),
+        brainstormingApproved: z.boolean().optional(),
         answers: z.record(z.string().max(2000)).optional(),
         memoryConfirmations: z.record(z.enum(["accepted", "rejected"])).optional(),
         format: formatSchema.optional(),
@@ -98,7 +99,7 @@ export async function createKiloKitServer(options: CreateKiloKitServerOptions = 
         idempotentHint: false,
       },
     },
-    async ({ message, context, sessionId, answers, memoryConfirmations, format }) => {
+    async ({ message, context, sessionId, brainstormingApproved, answers, memoryConfirmations, format }) => {
       const result = orchestrator.orchestrate({
         message,
         ...(context
@@ -112,6 +113,7 @@ export async function createKiloKitServer(options: CreateKiloKitServerOptions = 
             }
           : {}),
         ...(sessionId ? { sessionId } : {}),
+        ...(brainstormingApproved !== undefined ? { brainstormingApproved } : {}),
         ...(answers ? { answers } : {}),
         ...(memoryConfirmations ? { memoryConfirmations } : {}),
       });

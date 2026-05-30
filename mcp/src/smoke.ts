@@ -66,6 +66,8 @@ try {
     state?: string;
     workflow?: Array<{ skill?: { id?: string } }>;
     questions?: Array<{ id?: string; skillId?: string }>;
+    firstSkillToLoad?: { id?: string };
+    missingInfo?: string[];
   };
   if (orchestrationResult.state !== "brainstorming_required") {
     throw new Error(`Smoke orchestration did not require brainstorming: ${orchestrationText}`);
@@ -73,8 +75,11 @@ try {
   if (orchestrationResult.workflow?.[0]?.skill?.id !== "productivity/brainstorming") {
     throw new Error(`Smoke orchestration did not start with brainstorming: ${orchestrationText}`);
   }
-  if (!orchestrationResult.questions?.some((question) => question.id === "test_command" || question.skillId === "engineering/tdd")) {
-    throw new Error(`Smoke orchestration did not include TDD questions: ${orchestrationText}`);
+  if (orchestrationResult.firstSkillToLoad?.id !== "productivity/brainstorming") {
+    throw new Error(`Smoke orchestration did not instruct loading brainstorming: ${orchestrationText}`);
+  }
+  if ((orchestrationResult.questions?.length ?? 0) !== 0 || (orchestrationResult.missingInfo?.length ?? 0) !== 0) {
+    throw new Error(`Smoke orchestration should not use C4 questions as a gate: ${orchestrationText}`);
   }
 
   const readyOrchestration = await client.callTool({
@@ -82,13 +87,7 @@ try {
     arguments: {
       message: "Fix bug login, viết test trước",
       sessionId: orchestrationResult.sessionId,
-      answers: {
-        goal: "Fix login failure",
-        scope: "src/auth/login.ts",
-        success_criteria: "login test passes",
-        failing_behavior: "valid credentials are rejected",
-        test_command: "npm test -- login",
-      },
+      brainstormingApproved: true,
       format: "json",
     },
   });
@@ -98,11 +97,11 @@ try {
     firstSkillToLoad?: { id?: string };
     finalWorkflow?: Array<{ skill?: { id?: string } }>;
   };
-  if (readyResult.state !== "ready" || readyResult.firstSkillToLoad?.id !== "productivity/brainstorming") {
-    throw new Error(`Smoke orchestration did not release final workflow after answers: ${readyText}`);
+  if (readyResult.state !== "ready" || readyResult.firstSkillToLoad?.id !== "engineering/diagnose") {
+    throw new Error(`Smoke orchestration did not release post-brainstorming workflow after approval: ${readyText}`);
   }
-  if (readyResult.finalWorkflow?.[0]?.skill?.id !== "productivity/brainstorming") {
-    throw new Error(`Smoke final workflow did not start with brainstorming: ${readyText}`);
+  if (readyResult.finalWorkflow?.some((step) => step.skill?.id === "productivity/brainstorming")) {
+    throw new Error(`Smoke final workflow should not repeat brainstorming after approval: ${readyText}`);
   }
 
   const memoryReport = await client.callTool({

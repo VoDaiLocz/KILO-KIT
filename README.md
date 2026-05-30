@@ -23,8 +23,8 @@
 
 # 🚀 Kilo-Kit: Professional AI Agent Development Framework
 
-> **Version:** 1.0.0  
-> **Author:** Kilo-Kit Team  
+> **Version:** 1.3.0
+> **Author:** Kilo-Kit Team
 > **License:** Apache 2.0
 
 ## 🎯 What is Kilo-Kit?
@@ -196,11 +196,11 @@ Skills are automatically loaded when your task matches their keywords. See the [
 
 ## 🔌 MCP Integration
 
-Kilo-Kit v1.2.0 includes a read-only MCP server that exposes the skill library as an adaptive routing service for MCP-capable agents.
+Kilo-Kit v1.3.0 includes a read-only MCP server that exposes the skill library as an adaptive routing service for MCP-capable agents.
 
 | MCP Surface | Purpose |
 |-------------|---------|
-| `kilo_orchestrate_task` | C4 central gate: route internally, require brainstorming, ask questions, check memory, and release final workflow |
+| `kilo_orchestrate_task` | C4 central gate: require the real `/brainstorming` skill first, then log/route the approved task and release the post-brainstorming workflow |
 | `kilo_route_intent` | Route the current chat request to skills, workflow order, rule hierarchy, and decision trail |
 | `kilo_search_skills` | Search the skill catalog by task or keyword |
 | `kilo_get_skill` | Load one exact `SKILL.md` with context-safe truncation |
@@ -277,7 +277,7 @@ Kilo-Kit publishes `@vodailoc/kilo-kit-mcp` through npm Trusted Publishing. Conf
 | Repository | `VoDaiLocz/KILO-KIT` |
 | Workflow filename | `publish.yml` |
 
-After that, run the GitHub Actions workflow `Publish npm package`, or push a version tag such as `v1.2.0`. The workflow uses OIDC, so it does not need an npm token or interactive OTP.
+After that, run the GitHub Actions workflow `Publish npm package`, or push a version tag such as `v1.3.0`. The workflow uses OIDC, so it does not need an npm token or interactive OTP.
 
 ## 📋 Skill Dispatch Table
 
@@ -435,7 +435,8 @@ We welcome contributions! Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for:
 
 - [x] v1.0.0 - Core Cognitive Flow Architecture
 - [x] v1.1.0 - MCP Integration
-- [ ] v1.2.0 - Multi-Agent Orchestration
+- [x] v1.2.0 - Multi-Agent Orchestration
+- [x] v1.3.0 - Primary Brainstorming Gate for C4
 - [ ] v2.0.0 - Visual Workflow Builder
 
 ## 📄 License

@@ -24,7 +24,10 @@ describe("C4 orchestrator", () => {
     expect(result.state).toBe("brainstorming_required");
     expect(result.finalWorkflow).toBeUndefined();
     expect(result.workflow.map((step) => step.skill.id)[0]).toBe("productivity/brainstorming");
-    expect(result.questions.length).toBeGreaterThan(0);
+    expect(result.questions).toEqual([]);
+    expect(result.missingInfo).toEqual([]);
+    expect(result.firstSkillToLoad?.id).toBe("productivity/brainstorming");
+    expect(result.nextAction).toContain("kilo_get_skill");
   });
 
   it("does not duplicate brainstorming when brainstorming is already active", async () => {
@@ -43,7 +46,7 @@ describe("C4 orchestrator", () => {
     expect(brainstormingSteps).toHaveLength(1);
   });
 
-  it("returns ready only after answers and memory confirmations are provided", async () => {
+  it("returns ready only after brainstorming approval and memory confirmations are provided", async () => {
     const registry = await createSkillRegistry({ repoRoot });
     const memory = createInMemoryOrchestrationMemory();
     memory.rememberFact({
@@ -63,13 +66,7 @@ describe("C4 orchestrator", () => {
     const answered = orchestrator.orchestrate({
       message: first.message,
       sessionId: first.sessionId,
-      answers: {
-        goal: "Fix login failure",
-        scope: "src/auth/login.ts",
-        success_criteria: "login test passes",
-        failing_behavior: "valid credentials rejected",
-        test_command: "npm test -- login",
-      },
+      brainstormingApproved: true,
     });
 
     expect(answered.state).toBe("awaiting_memory_confirmation");
@@ -81,7 +78,8 @@ describe("C4 orchestrator", () => {
     });
 
     expect(ready.state).toBe("ready");
-    expect(ready.firstSkillToLoad?.id).toBe("productivity/brainstorming");
+    expect(ready.firstSkillToLoad?.id).toBe("engineering/diagnose");
+    expect(ready.finalWorkflow?.map((step) => step.skill.id)).not.toContain("productivity/brainstorming");
     expect(ready.verificationGate.commands).toContain("npm --prefix mcp test");
   });
 });

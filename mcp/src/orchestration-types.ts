@@ -116,6 +116,7 @@ export interface OrchestrationInput {
     projectFingerprint?: string;
   };
   sessionId?: string;
+  brainstormingApproved?: boolean;
   answers?: Record<string, string>;
   memoryConfirmations?: Record<string, "accepted" | "rejected">;
 }
