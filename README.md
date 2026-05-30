@@ -196,7 +196,7 @@ Skills are automatically loaded when your task matches their keywords. See the [
 
 ## 🔌 MCP Integration
 
-Kilo-Kit v1.1.1 includes a read-only MCP server that exposes the skill library as an adaptive routing service for MCP-capable agents.
+Kilo-Kit v1.2.0 includes a read-only MCP server that exposes the skill library as an adaptive routing service for MCP-capable agents.
 
 | MCP Surface | Purpose |
 |-------------|---------|
@@ -277,7 +277,7 @@ Kilo-Kit publishes `@vodailoc/kilo-kit-mcp` through npm Trusted Publishing. Conf
 | Repository | `VoDaiLocz/KILO-KIT` |
 | Workflow filename | `publish.yml` |
 
-After that, run the GitHub Actions workflow `Publish npm package`, or push a version tag such as `v1.1.1`. The workflow uses OIDC, so it does not need an npm token or interactive OTP.
+After that, run the GitHub Actions workflow `Publish npm package`, or push a version tag such as `v1.2.0`. The workflow uses OIDC, so it does not need an npm token or interactive OTP.
 
 ## 📋 Skill Dispatch Table
 

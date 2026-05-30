@@ -1,6 +1,6 @@
 # 🔌 Kilo-Kit MCP Server
 
-> **Version:** 1.1.1
+> **Version:** 1.2.0
 > **Mode:** Read-only Skill Registry + Validator
 > **Transport:** stdio
 
@@ -120,8 +120,8 @@ Configure the npm package once:
 Then publish by running the GitHub Actions workflow `Publish npm package`, or by pushing a version tag:
 
 ```bash
-git tag v1.1.1
-git push origin v1.1.1
+git tag v1.2.0
+git push origin v1.2.0
 ```
 
 The workflow runs build, typecheck, tests, smoke, skill validation, package dry-run, and then `npm publish --access public --ignore-scripts` through OIDC.
