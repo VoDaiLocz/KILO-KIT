@@ -1,102 +1,134 @@
-import type { RouteIntentInput, RouteIntentResult, RouteRecommendation, SkillRecord } from "./types.js";
+import type {
+  RouteDecisionEntry,
+  RouteIntentInput,
+  RouteIntentResult,
+  RouteRecommendation,
+  RouteWorkflowStep,
+  SkillRecord,
+} from "./types.js";
 import type { SkillRegistry } from "./registry.js";
+import type { RouteAnalyticsStore } from "./route-analytics.js";
+import {
+  analyzeIntent,
+  explainRoute,
+  RULE_HIERARCHY,
+  scoreSkillForRoute,
+  workflowForMode,
+  type RouteCandidate,
+} from "./routing-policy.js";
 
-export function routeIntent(registry: SkillRegistry, input: RouteIntentInput): RouteIntentResult {
-  const query = buildQuery(input);
+export interface RouteIntentOptions {
+  analytics?: RouteAnalyticsStore;
+}
+
+export function routeIntent(
+  registry: SkillRegistry,
+  input: RouteIntentInput,
+  options: RouteIntentOptions = {},
+): RouteIntentResult {
+  const profile = analyzeIntent(input);
   const limit = Math.max(1, Math.min(input.limit ?? 5, 10));
-  const searchMatches = registry.searchSkills({ query, limit: 25 });
-  const candidateIds = new Set(searchMatches.map((skill) => skill.id));
-  const candidates = [
-    ...searchMatches,
-    ...registry.listSkills().filter((skill) => !candidateIds.has(skill.id)),
-  ];
-  const ranked = candidates
-    .map((skill) => ({
-      skill,
-      score: scoreRoute(skill, input),
-      reason: explainRoute(skill, input),
-    }))
+  const ranked = registry
+    .listSkills()
+    .map((skill) => applyAnalyticsAdjustment(scoreSkillForRoute(skill, input, profile), profile.mode, options.analytics))
     .filter((candidate) => candidate.score > 0)
-    .sort((left, right) => right.score - left.score || left.skill.id.localeCompare(right.skill.id))
-    .slice(0, limit);
+    .sort((left, right) => right.score - left.score || left.skill.id.localeCompare(right.skill.id));
 
-  const recommended: RouteRecommendation[] = ranked.map((candidate, index) => ({
+  const recommended: RouteRecommendation[] = ranked.slice(0, limit).map((candidate, index) => ({
     skill: candidate.skill,
-    confidence: Math.max(0.1, Math.min(0.99, candidate.score / (candidate.score + 20 + index * 3))),
+    confidence: Math.max(0.1, Math.min(0.99, candidate.score / (candidate.score + 18 + index * 3))),
+    reason: candidate.reason,
+    score: candidate.score,
+  }));
+
+  const workflow = buildWorkflow(registry, profile.mode, ranked);
+  const decisionTrail = ranked.slice(0, 10).map<RouteDecisionEntry>((candidate) => ({
+    skillId: candidate.skill.id,
+    score: candidate.score,
+    matchedSignals: candidate.matchedSignals,
+    scoreBreakdown: candidate.scoreBreakdown,
     reason: candidate.reason,
   }));
 
-  return {
+  const result = {
     recommended,
-    nextAction: recommended[0]
-      ? `Load ${recommended[0].skill.id} with kilo_get_skill before executing the workflow.`
-      : "No strong skill match found. Search with more specific task keywords or inspect skills/SKILLS_INDEX.md.",
+    taskMode: profile.mode,
+    workflow,
+    ruleHierarchy: RULE_HIERARCHY,
+    decisionTrail,
+    nextAction: buildNextAction(recommended, workflow),
+  };
+
+  options.analytics?.record({
+    timestamp: new Date().toISOString(),
+    message: input.message,
+    taskMode: result.taskMode,
+    recommendedSkillIds: recommended.map((item) => item.skill.id),
+    workflowSkillIds: workflow.map((step) => step.skill.id),
+    decisionTrail,
+  });
+
+  return result;
+}
+
+function applyAnalyticsAdjustment(
+  candidate: RouteCandidate,
+  taskMode: string,
+  analytics: RouteAnalyticsStore | undefined,
+): RouteCandidate {
+  const adjustment = analytics?.scoreAdjustment(candidate.skill.id, taskMode) ?? 0;
+  if (adjustment <= 0) {
+    return candidate;
+  }
+
+  const scoreBreakdown = { ...candidate.scoreBreakdown, analytics: adjustment };
+  return {
+    ...candidate,
+    score: candidate.score + adjustment,
+    scoreBreakdown,
+    reason: explainRoute(candidate.skill, taskMode, candidate.matchedSignals, scoreBreakdown),
   };
 }
 
-function buildQuery(input: RouteIntentInput): string {
-  return [
-    input.message,
-    input.context?.mode,
-    input.context?.previousErrors,
-    ...(input.context?.files ?? []),
-  ]
-    .filter(Boolean)
-    .join(" ");
+function buildWorkflow(registry: SkillRegistry, mode: string, ranked: RouteCandidate[]): RouteWorkflowStep[] {
+  const workflowDefinition = workflowForMode(mode);
+
+  if (workflowDefinition.length === 0) {
+    return ranked.slice(0, 1).map((candidate) => ({
+      skill: candidate.skill,
+      role: "primary",
+      reason: "Best available skill from metadata and signal scoring.",
+    }));
+  }
+
+  return workflowDefinition
+    .map((step) => {
+      const skill = findSkillById(registry, step.id);
+      return skill ? { skill, role: step.role, reason: step.reason } : null;
+    })
+    .filter((step): step is RouteWorkflowStep => step !== null);
 }
 
-function scoreRoute(skill: SkillRecord, input: RouteIntentInput): number {
-  const text = buildQuery(input).toLowerCase();
-  let score = 1;
-
-  if (text.includes("test") || text.includes("tdd") || text.includes("test trước")) {
-    if (skill.id === "engineering/tdd") score += 50;
-    if (skill.id.includes("tdd")) score += 25;
-    if (skill.id.includes("testing")) score += 15;
+function findSkillById(registry: SkillRegistry, id: string): SkillRecord | undefined {
+  const [category, skill] = id.split("/");
+  if (!category || !skill) {
+    return undefined;
   }
 
-  if (text.includes("bug") || text.includes("fix") || text.includes("failing") || text.includes("error")) {
-    if (skill.id === "engineering/diagnose") score += 35;
-    if (skill.id.includes("debug")) score += 20;
-    if (skill.id === "kilo-kit/debugging/systematic") score += 15;
+  try {
+    return registry.getSkill(category, skill);
+  } catch {
+    return undefined;
   }
-
-  if (text.includes("ui") || text.includes("dashboard") || text.includes("react") || text.includes("frontend")) {
-    if (skill.category === "design") score += 35;
-    if (skill.id === "design/frontend-design") score += 20;
-  }
-
-  if (text.includes("mcp")) {
-    if (skill.id === "operations/mcp-builder") score += 40;
-    if (skill.id === "operations/mcp-management") score += 20;
-  }
-
-  if (input.context?.files?.some((file) => file.endsWith(".tsx") || file.endsWith(".jsx"))) {
-    if (skill.category === "design") score += 10;
-    if (skill.id === "engineering/react-patterns") score += 10;
-  }
-
-  return score;
 }
 
-function explainRoute(skill: SkillRecord, input: RouteIntentInput): string {
-  const text = buildQuery(input).toLowerCase();
-  const reasons: string[] = [];
-
-  if (skill.id === "engineering/tdd" && (text.includes("test") || text.includes("test trước"))) {
-    reasons.push("the request asks for test-first work");
-  }
-  if (skill.id === "engineering/diagnose" && (text.includes("bug") || text.includes("fix"))) {
-    reasons.push("the request describes a bug/fix workflow");
-  }
-  if (skill.category === "design" && (text.includes("ui") || text.includes("dashboard"))) {
-    reasons.push("the request targets user interface work");
-  }
-  if (skill.id.includes("mcp") && text.includes("mcp")) {
-    reasons.push("the request is about MCP integration");
+function buildNextAction(recommended: RouteRecommendation[], workflow: RouteWorkflowStep[]): string {
+  if (workflow.length > 0) {
+    const workflowOrder = workflow.map((step) => step.skill.id).join(" -> ");
+    return `Load skills in workflow order: ${workflowOrder}. Start with ${workflow[0]?.skill.id} using kilo_get_skill.`;
   }
 
-  return reasons.length > 0
-    ? `Selected because ${reasons.join(" and ")}.`
-    : `Selected from skill metadata match for '${input.message.slice(0, 80)}'.`;
+  return recommended[0]
+    ? `Load ${recommended[0].skill.id} with kilo_get_skill before executing the workflow.`
+    : "No strong skill match found. Search with more specific task keywords or inspect skills/SKILLS_INDEX.md.";
 }

@@ -38,10 +38,29 @@ export interface RouteRecommendation {
   skill: SkillRecord;
   confidence: number;
   reason: string;
+  score?: number;
+}
+
+export interface RouteWorkflowStep {
+  skill: SkillRecord;
+  role: "prepare" | "primary" | "support" | "quality";
+  reason: string;
+}
+
+export interface RouteDecisionEntry {
+  skillId: string;
+  score: number;
+  matchedSignals: string[];
+  scoreBreakdown: Record<string, number>;
+  reason: string;
 }
 
 export interface RouteIntentResult {
   recommended: RouteRecommendation[];
+  taskMode: string;
+  workflow: RouteWorkflowStep[];
+  ruleHierarchy: string[];
+  decisionTrail: RouteDecisionEntry[];
   nextAction: string;
 }
 

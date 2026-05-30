@@ -12,9 +12,12 @@ The Kilo-Kit MCP server exposes the `skills/` workflow surface to MCP-capable ag
 
 | Capability | MCP Tool | Purpose |
 |------------|----------|---------|
+| C4 orchestration | `kilo_orchestrate_task` | Enforce brainstorming-first workflow, required questions, memory suggestions, and final workflow release |
 | Skill discovery | `kilo_search_skills` | Search the skill library by task/query |
-| Intent routing | `kilo_route_intent` | Recommend skills for the current chat context |
+| Intent routing | `kilo_route_intent` | Recommend skills, workflow order, rule hierarchy, and decision trail for the current chat context |
 | Skill loading | `kilo_get_skill` | Load one exact `SKILL.md` with output limits |
+| Route reporting | `kilo_route_report` | Summarize route telemetry, top skills, workflows, scores, and conflict penalties |
+| Memory reporting | `kilo_memory_report` | Inspect C4 global memory facts, decisions, and suggestions |
 | Quality gate | `kilo_validate_skills` | Run the Kilo-Kit skill validator summary |
 
 Resources:
@@ -47,8 +50,8 @@ npm run smoke
 Expected verification:
 
 ```text
-Test Files  4 passed
-Tests       8 passed
+Test Files  9 passed
+Tests       22 passed
 MCP smoke check passed.
 ```
 
@@ -70,6 +73,25 @@ Use the published npm package in any MCP-capable client:
 ```
 
 The npm package includes the Kilo-Kit skill library, core master file, validator, and built MCP server.
+
+Route telemetry is in-memory by default. To persist route decisions between server runs, set:
+
+```bash
+KILO_KIT_WRITE_DECISIONS=true
+# optional override:
+KILO_KIT_DECISION_TRAIL_PATH=/absolute/path/decision-trail.jsonl
+```
+
+When persistence is enabled and no override is provided, decisions are written to `.kilo/decision-trail.jsonl` under the configured repository root.
+
+C4 orchestration memory is global by default at `~/.kilo-kit/orchestrator.sqlite` when Node's SQLite runtime is available. Override it with:
+
+```bash
+KILO_KIT_MEMORY_PATH=/absolute/path/orchestrator.sqlite
+KILO_KIT_ORCHESTRATION_AUDIT_PATH=/absolute/path/orchestration-audit.jsonl
+```
+
+`kilo_orchestrate_task` uses the C4 Brainstorming-First Gate: substantive work starts with `productivity/brainstorming`, then required questions, then memory suggestions that require explicit accept/reject before a final workflow is released.
 
 ### Codex CLI on Windows
 
@@ -136,7 +158,9 @@ Use `.mcp/kilo-kit.example.json` as the portable template.
 
 ## 🛡️ Security Posture
 
-- Read-only tools only.
+- Externally read-only by default.
+- Route telemetry is in-memory by default; JSONL persistence is opt-in with `KILO_KIT_WRITE_DECISIONS=true`.
+- C4 memory stores structured facts and decisions, not raw chat logs.
 - No arbitrary filesystem reads.
 - Category and skill names must be single kebab-case path segments.
 - Repository paths are resolved through an allowlist boundary.
@@ -149,8 +173,12 @@ Use `.mcp/kilo-kit.example.json` as the portable template.
 
 ```text
 User request
-→ kilo_route_intent(message, context)
-→ kilo_get_skill(category, skill)
-→ follow selected SKILL.md
+→ kilo_orchestrate_task(message, context)
+→ answer required C4 questions
+→ accept/reject memory suggestions
+→ kilo_get_skill(category, skill) for the first workflow skill
+→ follow final workflow skills in order
+→ kilo_route_report when you need routing analytics
+→ kilo_memory_report when you need memory analytics
 → kilo_validate_skills before claiming the skill library is healthy
 ```

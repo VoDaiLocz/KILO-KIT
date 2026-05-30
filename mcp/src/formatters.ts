@@ -1,3 +1,5 @@
+import type { RouteReport } from "./route-analytics.js";
+import type { MemoryReport, OrchestrationResult } from "./orchestration-types.js";
 import type { LoadedSkill, RouteIntentResult, SearchSkillsInput, SkillRecord, ValidationSummary } from "./types.js";
 
 export function textResponse(text: string): { content: Array<{ type: "text"; text: string }> } {
@@ -70,9 +72,33 @@ export function formatRoute(result: RouteIntentResult, format: "markdown" | "jso
   return [
     "# Kilo-Kit Skill Route",
     "",
+    `Task mode: \`${result.taskMode}\``,
+    "",
+    "## Recommended Skills",
+    "",
     ...result.recommended.map(
       (item, index) =>
-        `${index + 1}. **${item.skill.id}** (${Math.round(item.confidence * 100)}%)\n   ${item.reason}\n   Path: \`${item.skill.skillPath}\``,
+        `${index + 1}. **${item.skill.id}** (${Math.round(item.confidence * 100)}%, score ${item.score ?? "n/a"})\n   ${item.reason}\n   Path: \`${item.skill.skillPath}\``,
+    ),
+    "",
+    "## Workflow",
+    "",
+    ...result.workflow.map(
+      (step, index) =>
+        `${index + 1}. **${step.skill.id}** (${step.role})\n   ${step.reason}`,
+    ),
+    "",
+    "## Rule Hierarchy",
+    "",
+    result.ruleHierarchy.map((rule, index) => `${index + 1}. \`${rule}\``).join("\n"),
+    "",
+    "## Decision Trail",
+    "",
+    ...result.decisionTrail.slice(0, 5).map(
+      (entry, index) =>
+        `${index + 1}. **${entry.skillId}** score ${entry.score}\n   Signals: ${
+          entry.matchedSignals.length > 0 ? entry.matchedSignals.map((signal) => `\`${signal}\``).join(", ") : "none"
+        }\n   ${entry.reason}`,
     ),
     "",
     `Next action: ${result.nextAction}`,
@@ -94,5 +120,160 @@ export function formatValidation(summary: ValidationSummary, format: "markdown" 
     "```text",
     summary.output,
     "```",
+  ].join("\n");
+}
+
+export function formatRouteReport(report: RouteReport, format: "markdown" | "json"): string {
+  if (format === "json") {
+    return JSON.stringify(report, null, 2);
+  }
+
+  const taskModes =
+    report.taskModes.length > 0
+      ? report.taskModes.map((item) => `- \`${item.taskMode}\`: ${item.count}`).join("\n")
+      : "- No task modes recorded.";
+  const workflows =
+    report.workflows.length > 0
+      ? report.workflows
+          .slice(0, 5)
+          .map((item) => `- ${item.workflow.map((skill) => `\`${skill}\``).join(" -> ")}: ${item.count}`)
+          .join("\n")
+      : "- No workflows recorded.";
+  const topSkills =
+    report.topSkills.length > 0
+      ? report.topSkills
+          .slice(0, 10)
+          .map(
+            (item) =>
+              `- \`${item.skillId}\`: recommended ${item.timesRecommended}, workflow ${item.timesInWorkflow}, primary ${item.timesPrimary}, avg score ${item.avgScore}`,
+          )
+          .join("\n")
+      : "- No skills recorded.";
+  const conflicts =
+    report.conflictPenalties.length > 0
+      ? report.conflictPenalties
+          .map((item) => `- \`${item.skillId}\`: ${item.count} penalties, total ${item.totalPenalty}`)
+          .join("\n")
+      : "- No conflict penalties recorded.";
+
+  return [
+    "# Kilo-Kit Route Report",
+    "",
+    `Total events: **${report.totalEvents}**`,
+    "",
+    "## Task Modes",
+    taskModes,
+    "",
+    "## Workflows",
+    workflows,
+    "",
+    "## Top Skills",
+    topSkills,
+    "",
+    "## Conflict Penalties",
+    conflicts,
+  ].join("\n");
+}
+
+export function formatOrchestration(result: OrchestrationResult, format: "markdown" | "json"): string {
+  if (format === "json") {
+    return JSON.stringify(result, null, 2);
+  }
+
+  const questions =
+    result.questions.length > 0
+      ? result.questions
+          .map(
+            (question, index) =>
+              `${index + 1}. **${question.id}**${question.required ? " (required)" : ""}\n   ${question.prompt}`,
+          )
+          .join("\n")
+      : "No questions required.";
+  const workflow =
+    result.workflow.length > 0
+      ? result.workflow.map((step, index) => `${index + 1}. **${step.skill.id}** (${step.role})\n   ${step.reason}`).join("\n")
+      : "No workflow selected.";
+  const memorySuggestions =
+    result.memorySuggestions.length > 0
+      ? result.memorySuggestions
+          .map(
+            (suggestion) =>
+              `- **${suggestion.key}** (${Math.round(suggestion.confidence * 100)}%)\n  ${suggestion.reason}\n  Requires confirmation: ${suggestion.requiresConfirmation ? "yes" : "no"}`,
+          )
+          .join("\n")
+      : "- No memory suggestions.";
+  const verification =
+    result.verificationGate.commands.length > 0
+      ? result.verificationGate.commands.map((command) => `- \`${command}\``).join("\n")
+      : "- No commands selected.";
+
+  return [
+    "# Kilo-Kit C4 Orchestration",
+    "",
+    `Session: \`${result.sessionId}\``,
+    `State: \`${result.state}\``,
+    `Task mode: \`${result.taskMode}\``,
+    "",
+    "## Questions",
+    questions,
+    "",
+    "## Workflow",
+    workflow,
+    "",
+    "## Memory Suggestions",
+    memorySuggestions,
+    "",
+    "## Verification Gate",
+    verification,
+    "",
+    `Next action: ${result.nextAction}`,
+  ].join("\n");
+}
+
+export function formatMemoryReport(report: MemoryReport, format: "markdown" | "json"): string {
+  if (format === "json") {
+    return JSON.stringify(report, null, 2);
+  }
+
+  const facts =
+    report.facts.length > 0
+      ? report.facts
+          .slice(0, 20)
+          .map((fact) => `- \`${fact.key}\` (${fact.kind}, confidence ${fact.confidence}) from ${fact.source}`)
+          .join("\n")
+      : "- No memory facts recorded.";
+  const decisions =
+    report.decisions.length > 0
+      ? report.decisions.map((decision) => `- \`${decision.suggestionKey}\`: ${decision.decision}`).join("\n")
+      : "- No memory decisions recorded.";
+  const sessions =
+    report.sessions.length > 0
+      ? report.sessions
+          .slice(0, 10)
+          .map((session) => `- \`${session.id}\`: ${session.state} (${session.taskMode})`)
+          .join("\n")
+      : "- No orchestration sessions recorded.";
+  const outcomes =
+    report.outcomes.length > 0
+      ? report.outcomes
+          .slice(0, 10)
+          .map((outcome) => `- \`${outcome.id}\`: ${outcome.outcome} (${outcome.taskMode})`)
+          .join("\n")
+      : "- No workflow outcomes recorded.";
+
+  return [
+    "# Kilo-Kit Memory Report",
+    "",
+    "## Facts",
+    facts,
+    "",
+    "## Decisions",
+    decisions,
+    "",
+    "## Sessions",
+    sessions,
+    "",
+    "## Outcomes",
+    outcomes,
   ].join("\n");
 }

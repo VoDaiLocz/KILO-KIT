@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { readFile } from "node:fs/promises";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -9,12 +10,19 @@ import { z } from "zod";
 
 import {
   formatLoadedSkill,
+  formatMemoryReport,
+  formatOrchestration,
   formatRoute,
+  formatRouteReport,
   formatSkills,
   formatValidation,
   textResponse,
 } from "./formatters.js";
+import { createJsonlOrchestrationAudit, createNoopOrchestrationAudit } from "./orchestration-audit.js";
+import { createSqliteOrchestrationMemory } from "./orchestration-memory.js";
+import { createOrchestrator } from "./orchestrator.js";
 import { resolveInsideRepo } from "./paths.js";
+import { createInMemoryRouteAnalytics, createJsonlRouteAnalytics } from "./route-analytics.js";
 import { createSkillRegistry } from "./registry.js";
 import { routeIntent } from "./router.js";
 import { validateSkills } from "./validator.js";
@@ -32,6 +40,25 @@ export interface CreateKiloKitServerOptions {
 export async function createKiloKitServer(options: CreateKiloKitServerOptions = {}): Promise<McpServer> {
   const repoRoot = path.resolve(options.repoRoot ?? process.env.KILO_KIT_REPO_ROOT ?? DEFAULT_REPO_ROOT);
   const registry = await createSkillRegistry({ repoRoot });
+  const routeAnalytics =
+    process.env.KILO_KIT_WRITE_DECISIONS === "true"
+      ? createJsonlRouteAnalytics({
+          filePath: process.env.KILO_KIT_DECISION_TRAIL_PATH
+            ? path.resolve(process.env.KILO_KIT_DECISION_TRAIL_PATH)
+            : resolveInsideRepo(repoRoot, ".kilo/decision-trail.jsonl"),
+        })
+      : createInMemoryRouteAnalytics();
+  const orchestrationMemory = await createSqliteOrchestrationMemory({
+    filePath: path.resolve(process.env.KILO_KIT_MEMORY_PATH ?? path.join(os.homedir(), ".kilo-kit/orchestrator.sqlite")),
+  });
+  const orchestrationAudit = process.env.KILO_KIT_ORCHESTRATION_AUDIT_PATH
+    ? createJsonlOrchestrationAudit(path.resolve(process.env.KILO_KIT_ORCHESTRATION_AUDIT_PATH))
+    : createNoopOrchestrationAudit();
+  const orchestrator = createOrchestrator({
+    registry,
+    memory: orchestrationMemory,
+    audit: orchestrationAudit,
+  });
 
   const server = new McpServer(
     {
@@ -40,8 +67,73 @@ export async function createKiloKitServer(options: CreateKiloKitServerOptions = 
     },
     {
       instructions:
-        "Use kilo_route_intent before selecting a Kilo-Kit workflow skill. Load one selected skill with kilo_get_skill, then follow its instructions. All tools are read-only.",
+        "Use kilo_route_intent before selecting a Kilo-Kit workflow skill. Load one selected skill with kilo_get_skill, then follow its instructions. Route telemetry is in-memory by default and only persists when KILO_KIT_WRITE_DECISIONS=true.",
     },
+  );
+
+  server.registerTool(
+    "kilo_orchestrate_task",
+    {
+      title: "Kilo-Kit C4 Orchestrate Task",
+      description:
+        "Central C4 orchestration gate. Routes internally, enforces brainstorming-first, asks required questions, checks memory suggestions, and releases a final workflow only after confirmation.",
+      inputSchema: {
+        message: z.string().min(1).max(4000).describe("Current user request or task summary."),
+        context: z
+          .object({
+            files: z.array(z.string().max(300)).max(30).optional(),
+            mode: z.string().max(80).optional(),
+            previousErrors: z.string().max(2000).optional(),
+            projectFingerprint: z.string().max(200).optional(),
+          })
+          .optional(),
+        sessionId: z.string().min(1).max(120).optional(),
+        answers: z.record(z.string().max(2000)).optional(),
+        memoryConfirmations: z.record(z.enum(["accepted", "rejected"])).optional(),
+        format: formatSchema.optional(),
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: false,
+      },
+    },
+    async ({ message, context, sessionId, answers, memoryConfirmations, format }) => {
+      const result = orchestrator.orchestrate({
+        message,
+        ...(context
+          ? {
+              context: {
+                ...(context.files ? { files: context.files } : {}),
+                ...(context.mode ? { mode: context.mode } : {}),
+                ...(context.previousErrors ? { previousErrors: context.previousErrors } : {}),
+                ...(context.projectFingerprint ? { projectFingerprint: context.projectFingerprint } : {}),
+              },
+            }
+          : {}),
+        ...(sessionId ? { sessionId } : {}),
+        ...(answers ? { answers } : {}),
+        ...(memoryConfirmations ? { memoryConfirmations } : {}),
+      });
+      return textResponse(formatOrchestration(result, normalizeFormat(format)));
+    },
+  );
+
+  server.registerTool(
+    "kilo_memory_report",
+    {
+      title: "Kilo-Kit C4 Memory Report",
+      description: "Read global C4 memory facts, decisions, and recent suggestions.",
+      inputSchema: {
+        format: formatSchema.optional(),
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    async ({ format }) => textResponse(formatMemoryReport(orchestrationMemory.report(), normalizeFormat(format))),
   );
 
   server.registerTool(
@@ -137,9 +229,27 @@ export async function createKiloKitServer(options: CreateKiloKitServerOptions = 
         message,
         ...(routeContext ? { context: routeContext } : {}),
         ...(limit ? { limit } : {}),
-      });
+      }, { analytics: routeAnalytics });
       return textResponse(formatRoute(result, normalizeFormat(format)));
     },
+  );
+
+  server.registerTool(
+    "kilo_route_report",
+    {
+      title: "Kilo-Kit Route Report",
+      description:
+        "Summarize route telemetry: top skills, task modes, workflow chains, score averages, and conflict penalties.",
+      inputSchema: {
+        format: formatSchema.optional(),
+      },
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+      },
+    },
+    async ({ format }) => textResponse(formatRouteReport(routeAnalytics.report(), normalizeFormat(format))),
   );
 
   server.registerTool(

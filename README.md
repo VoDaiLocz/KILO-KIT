@@ -200,9 +200,12 @@ Kilo-Kit v1.1.1 includes a read-only MCP server that exposes the skill library a
 
 | MCP Surface | Purpose |
 |-------------|---------|
-| `kilo_route_intent` | Route the current chat request to the best Kilo-Kit skills |
+| `kilo_orchestrate_task` | C4 central gate: route internally, require brainstorming, ask questions, check memory, and release final workflow |
+| `kilo_route_intent` | Route the current chat request to skills, workflow order, rule hierarchy, and decision trail |
 | `kilo_search_skills` | Search the skill catalog by task or keyword |
 | `kilo_get_skill` | Load one exact `SKILL.md` with context-safe truncation |
+| `kilo_route_report` | Summarize route telemetry, top skills, workflows, and conflict penalties |
+| `kilo_memory_report` | Inspect C4 global memory facts, decisions, and suggestions |
 | `kilo_validate_skills` | Run the skill validation quality gate |
 | `kilo://skills/index` | Resource view of the lightweight skill index |
 | `kilo://skills/{category}/{skill}` | Resource view for one skill |
@@ -231,6 +234,10 @@ enabled = true
 ```
 
 The `--prefix` keeps npm from resolving the local source checkout when Codex is opened inside the Kilo-Kit repository.
+
+Route telemetry is kept in memory by default. Set `KILO_KIT_WRITE_DECISIONS=true` to persist JSONL route decisions under `.kilo/decision-trail.jsonl`, or set `KILO_KIT_DECISION_TRAIL_PATH` to choose a different file.
+
+C4 orchestration memory is global by default at `~/.kilo-kit/orchestrator.sqlite` when Node's SQLite runtime is available. Set `KILO_KIT_MEMORY_PATH` to use a different SQLite file, and set `KILO_KIT_ORCHESTRATION_AUDIT_PATH` to write an append-only JSONL audit trail for C4 state transitions.
 
 For local development, build and verify:
 
