@@ -49,4 +49,4 @@ See `src/core/KILO_MASTER.md` for the full Cognitive Flow Architecture.
 
 ---
 
-*Kilo-Kit OpenCode Plugin v1.3.0*
+*Kilo-Kit OpenCode Plugin v1.3.1*

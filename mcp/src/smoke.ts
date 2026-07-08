@@ -29,6 +29,22 @@ try {
     }
   }
 
+  const prompts = await client.listPrompts();
+  const promptNames = prompts.prompts.map((prompt) => prompt.name);
+  for (const required of ["kilo-c4-workflow", "kilo-select-skill", "kilo-validate-library"]) {
+    if (!promptNames.includes(required)) {
+      throw new Error(`Missing expected prompt: ${required}`);
+    }
+  }
+
+  const resources = await client.listResources();
+  const resourceUris = resources.resources.map((resource) => resource.uri);
+  for (const required of ["kilo://skills/index", "kilo://core/master", "kilo://rules/c4"]) {
+    if (!resourceUris.includes(required)) {
+      throw new Error(`Missing expected resource: ${required}`);
+    }
+  }
+
   const route = await client.callTool({
     name: "kilo_route_intent",
     arguments: {

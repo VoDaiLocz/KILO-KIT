@@ -97,4 +97,4 @@ When the MCP server is available, call `kilo_route_intent` with the current user
 
 ---
 
-*Kilo-Kit Codex Plugin v1.3.0*
+*Kilo-Kit Codex Plugin v1.3.1*

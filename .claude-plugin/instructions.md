@@ -49,4 +49,4 @@ See `src/core/KILO_MASTER.md` for the full Cognitive Flow Architecture.
 
 ---
 
-*Kilo-Kit Claude Plugin v1.3.0*
+*Kilo-Kit Claude Plugin v1.3.1*

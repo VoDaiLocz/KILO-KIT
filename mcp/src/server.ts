@@ -28,7 +28,7 @@ import { routeIntent } from "./router.js";
 import { validateSkills } from "./validator.js";
 import type { ResponseFormat } from "./types.js";
 
-const SERVER_VERSION = "1.3.0";
+const SERVER_VERSION = "1.3.1";
 const DEFAULT_REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
 const formatSchema = z.enum(["markdown", "json"]).default("markdown");
@@ -67,7 +67,7 @@ export async function createKiloKitServer(options: CreateKiloKitServerOptions = 
     },
     {
       instructions:
-        "Use kilo_route_intent before selecting a Kilo-Kit workflow skill. Load one selected skill with kilo_get_skill, then follow its instructions. Route telemetry is in-memory by default and only persists when KILO_KIT_WRITE_DECISIONS=true.",
+        "For substantive coding, debugging, refactoring, review, publishing, or project-work requests, call kilo_orchestrate_task before implementation. If it returns brainstorming_required, load productivity/brainstorming with kilo_get_skill and get user approval before coding. After approval, call kilo_orchestrate_task again with the same sessionId and brainstormingApproved=true. If it returns awaiting_memory_confirmation, accept or reject memory suggestions before execution. When it returns ready, load firstSkillToLoad with kilo_get_skill, inspect any additional relevant skills available in the host agent, follow the finalWorkflow, and satisfy verificationGate before claiming completion. For read-only requests, kilo_route_intent is acceptable. Route telemetry is in-memory by default and only persists when KILO_KIT_WRITE_DECISIONS=true.",
     },
   );
 
@@ -323,6 +323,24 @@ function registerResources(
   );
 
   server.registerResource(
+    "kilo-c4-operating-rules",
+    "kilo://rules/c4",
+    {
+      title: "Kilo-Kit C4 Operating Rules",
+      description: "Minimal rules a host agent should follow after installing the Kilo-Kit MCP server.",
+      mimeType: "text/markdown",
+    },
+    async (uri) => ({
+      contents: [
+        {
+          uri: uri.href,
+          text: C4_OPERATING_RULES,
+        },
+      ],
+    }),
+  );
+
+  server.registerResource(
     "kilo-skill",
     new ResourceTemplate("kilo://skills/{category}/{skill}", {
       list: async () => ({
@@ -356,6 +374,28 @@ function registerResources(
 }
 
 function registerPrompts(server: McpServer): void {
+  server.registerPrompt(
+    "kilo-c4-workflow",
+    {
+      title: "Run Request Through C4",
+      description: "Prompt the agent to use the C4 gate before substantive implementation work.",
+      argsSchema: {
+        request: z.string().min(1).max(4000),
+      },
+    },
+    ({ request }) => ({
+      messages: [
+        {
+          role: "user",
+          content: {
+            type: "text",
+            text: `Use the Kilo-Kit C4 workflow for this request. Call kilo_orchestrate_task first. If the state is brainstorming_required, load productivity/brainstorming with kilo_get_skill and get approval before coding. If the state is awaiting_memory_confirmation, resolve the suggestions. When the state is ready, load firstSkillToLoad, inspect any other relevant host-agent skills, follow finalWorkflow, and satisfy verificationGate before completion.\n\nRequest:\n${request}`,
+          },
+        },
+      ],
+    }),
+  );
+
   server.registerPrompt(
     "kilo-select-skill",
     {
@@ -402,6 +442,22 @@ function registerPrompts(server: McpServer): void {
 function normalizeFormat(format: ResponseFormat | undefined): ResponseFormat {
   return format ?? "markdown";
 }
+
+const C4_OPERATING_RULES = `# Kilo-Kit C4 Operating Rules
+
+For substantive coding, debugging, refactoring, review, publishing, or project-work requests:
+
+1. Call \`kilo_orchestrate_task\` before implementation.
+2. If state is \`brainstorming_required\`, load \`productivity/brainstorming\` with \`kilo_get_skill\`, follow it, and get user approval.
+3. Call \`kilo_orchestrate_task\` again with the same \`sessionId\` and \`brainstormingApproved=true\`.
+4. If state is \`awaiting_memory_confirmation\`, accept or reject memory suggestions before execution.
+5. When state is \`ready\`, load \`firstSkillToLoad\` with \`kilo_get_skill\`.
+6. Also inspect the host agent's own available skill list and load any other relevant skills before coding.
+7. Follow \`finalWorkflow\`.
+8. Satisfy \`verificationGate\` before claiming completion.
+
+For read-only requests, \`kilo_route_intent\` is enough.
+`;
 
 async function main(): Promise<void> {
   const server = await createKiloKitServer();

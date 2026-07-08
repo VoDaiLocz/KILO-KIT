@@ -277,9 +277,9 @@ function buildNextAction(
     return `Accept or reject memory suggestions before execution: ${pendingSuggestions.map((item) => item.key).join(", ")}.`;
   }
   if (firstSkillToLoad) {
-    return `Load ${firstSkillToLoad.id} with kilo_get_skill, then follow the final workflow.`;
+    return `Load ${firstSkillToLoad.id} with kilo_get_skill, then follow the final workflow. IMPORTANT: Do NOT rely solely on this workflow. You MUST also scan your full internal skill list (in your system prompt) and use view_file to load any other relevant skills before coding.`;
   }
-  return session.route.nextAction;
+  return session.route.nextAction + " IMPORTANT: You MUST also scan your full internal skill list and load any other relevant skills before coding.";
 }
 
 function executableWorkflow(session: OrchestrationSession): RouteWorkflowStep[] {

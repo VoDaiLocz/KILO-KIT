@@ -1,6 +1,6 @@
 # 🔌 Kilo-Kit MCP Server
 
-> **Version:** 1.3.0
+> **Version:** 1.3.1
 > **Mode:** Read-only Skill Registry + Validator
 > **Transport:** stdio
 
@@ -26,12 +26,14 @@ Resources:
 |----------|---------|
 | `kilo://skills/index` | Lightweight skill index |
 | `kilo://core/master` | Kilo-Kit master skill |
+| `kilo://rules/c4` | Minimal host-agent operating rules for the C4 workflow |
 | `kilo://skills/{category}/{skill}` | Dynamic skill resource |
 
 Prompts:
 
 | Prompt | Purpose |
 |--------|---------|
+| `kilo-c4-workflow` | Run a request through the C4 gate before substantive implementation |
 | `kilo-select-skill` | Route a request before implementation |
 | `kilo-validate-library` | Run the validation quality gate |
 
@@ -50,8 +52,8 @@ npm run smoke
 Expected verification:
 
 ```text
-Test Files  9 passed
-Tests       22 passed
+Test Files  10 passed
+Tests       28 passed
 MCP smoke check passed.
 ```
 
@@ -74,6 +76,16 @@ Use the published npm package in any MCP-capable client:
 
 The npm package includes the Kilo-Kit skill library, core master file, validator, and built MCP server.
 
+Install the host-agent bootstrap rule in each project where you want C4 to run automatically:
+
+```bash
+npx -y --package=@vodailoc/kilo-kit-mcp kilo-kit-init init --client gemini
+npx -y --package=@vodailoc/kilo-kit-mcp kilo-kit-init init --client codex
+npx -y --package=@vodailoc/kilo-kit-mcp kilo-kit-init init --client claude
+```
+
+Use `--client all` to write `GEMINI.md`, `AGENTS.md`, and `CLAUDE.md` in the target project. Use `--dir <path>` to initialize another project directory.
+
 Route telemetry is in-memory by default. To persist route decisions between server runs, set:
 
 ```bash
@@ -92,6 +104,14 @@ KILO_KIT_ORCHESTRATION_AUDIT_PATH=/absolute/path/orchestration-audit.jsonl
 ```
 
 `kilo_orchestrate_task` uses the C4 Brainstorming-First Gate as a skill gate, not a separate C4 questionnaire. Substantive work starts by loading and following `productivity/brainstorming`. After the user approves the brainstorming direction, call `kilo_orchestrate_task` again with `brainstormingApproved=true`; C4 then checks memory suggestions and releases the post-brainstorming workflow.
+
+The released workflow is the primary C4 route, not an exclusive context source. After loading the first C4-selected skill, the agent must still inspect its own available skill list and load any other relevant skills before coding.
+
+Installing the MCP server exposes tools, prompts, resources, and server instructions. It does not force every MCP host to call those tools automatically. If a client does not reliably follow MCP server instructions, use `kilo-kit-init` or add one bootstrap rule to the local agent configuration:
+
+```text
+For substantive project work, call kilo_orchestrate_task before implementation and follow the returned C4 state, workflow, and verificationGate.
+```
 
 ### Codex CLI on Windows
 
@@ -120,8 +140,8 @@ Configure the npm package once:
 Then publish by running the GitHub Actions workflow `Publish npm package`, or by pushing a version tag:
 
 ```bash
-git tag v1.3.0
-git push origin v1.3.0
+git tag v1.3.1
+git push origin v1.3.1
 ```
 
 The workflow runs build, typecheck, tests, smoke, skill validation, package dry-run, and then `npm publish --access public --ignore-scripts` through OIDC.
@@ -178,6 +198,7 @@ User request
 → kilo_orchestrate_task(message, context, brainstormingApproved=true)
 → accept/reject memory suggestions when relevant
 → kilo_get_skill(category, skill) for the first post-brainstorming workflow skill
+→ inspect the agent's internal skill list and load any other relevant skills
 → follow final workflow skills in order
 → kilo_route_report when you need routing analytics
 → kilo_memory_report when you need memory analytics

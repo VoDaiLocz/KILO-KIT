@@ -1,11 +1,12 @@
 {
   "name": "@kilo-kit/mcp",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Kilo-Kit MCP server for skill routing, skill loading, and validation.",
   "type": "module",
   "private": true,
   "bin": {
-    "kilo-kit-mcp": "./dist/server.js"
+    "kilo-kit-mcp": "./dist/server.js",
+    "kilo-kit-init": "./dist/init.js"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -25,5 +26,8 @@
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  "optionalDependencies": {
+    "@rolldown/binding-linux-x64-gnu": "^1.0.0-rc.17"
   }
 }

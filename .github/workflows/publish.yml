@@ -38,7 +38,7 @@ jobs:
         run: npm ci
 
       - name: Install MCP dependencies
-        run: npm --prefix mcp install --no-save --package-lock=false
+        run: npm --prefix mcp ci
 
       - name: Run release verification
         run: npm run prepublishOnly
