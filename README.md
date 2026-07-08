@@ -21,21 +21,33 @@
   <img src="https://img.shields.io/badge/TypeScript-5.9-3178c6?style=for-the-badge&logo=typescript&labelColor=0f172a" alt="TypeScript 5.9">
 </p>
 
-# Kilo-Kit: Professional AI Agent Development Framework
+# Kilo-Kit: MCP Workflow Gates for Coding Agents
 
 > **Version:** 1.3.1
 > **Author:** Kilo-Kit Team
 > **License:** Apache 2.0
 
-Kilo-Kit is a local-first skill and orchestration framework for MCP-capable coding agents.
+Kilo-Kit is a local-first MCP server and skill library for making coding agents follow safer, repeatable workflows before they touch code.
 
-It packages a curated `skills/` library, an MCP server, and a C4 orchestration gate that turns a user request into an auditable workflow:
+Use it when your agent skips planning, ignores project workflow rules, forgets useful context, or claims work is done before verification.
+
+It packages a curated `skills/` library, an MCP server, and a C4 workflow gate that turns a user request into an auditable loop:
 
 ```text
-request -> route -> brainstorming gate -> memory confirmation -> workflow release -> verification gate
+request -> route -> planning gate -> memory check -> workflow release -> verification gate
 ```
 
 The published package is `@vodailoc/kilo-kit-mcp`.
+
+## Why Use It
+
+| Problem | Kilo-Kit behavior |
+| --- | --- |
+| Agent starts coding too early | C4 requires planning/brainstorming before substantive work. |
+| Agent forgets repo-specific preferences | Optional memory suggests prior decisions before execution. |
+| Agent chooses random instructions | Skill routing returns the workflow and first skill to load. |
+| Agent says "done" without proof | Verification gate must be satisfied before completion. |
+| Different agents behave differently | `kilo-kit-init` writes the same C4 rule for Gemini, Codex, and Claude. |
 
 ## What It Provides
 
