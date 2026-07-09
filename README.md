@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/vodailocz-kilo-kit-mcp-badge.png)](https://mseep.ai/app/vodailocz-kilo-kit-mcp)
+
 <p align="center">
   <img src="assets/social-preview.png" alt="Kilo-Kit social preview" width="100%">
 </p>
